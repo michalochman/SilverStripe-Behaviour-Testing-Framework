@@ -1,6 +1,7 @@
 <?php
 
-use Behat\Behat\Context\BehatContext,
+use Behat\Behat\Context\ClosuredContextInterface,
+    Behat\Behat\Context\BehatContext,
     Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
@@ -10,7 +11,7 @@ require_once 'mink/autoload.php';
 require_once 'PHPUnit/Autoload.php';
 require_once 'PHPUnit/Framework/Assert/Functions.php';
 
-class FeatureContext extends BehatContext
+class FeatureContext extends Behat\Mink\Behat\Context\MinkContext
 {
 
     /**
@@ -19,8 +20,7 @@ class FeatureContext extends BehatContext
      *
      * @param   array   $parameters     context parameters (set them up through behat.yml)
      */
-    public function __construct(array $parameters)
-    {
-        // Initialize your context here
+    public function __construct(array $kernel)
+        $this->useContext('mink_redirect', new \Behat\CommonContexts\MinkRedirectContext($kernel));
     }
 }
