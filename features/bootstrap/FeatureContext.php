@@ -5,6 +5,9 @@ use Behat\Behat\Context\BehatContext,
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
 
+// Third party libraries
+require_once 'mink/autoload.php';
+
 class FeatureContext extends BehatContext
 {
 
