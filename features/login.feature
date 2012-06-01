@@ -7,4 +7,4 @@ Feature: Login
     Given I am on "/admin/"
     Then I should be redirected to "/Security/login"
     And the response status code should be 200
-
+    And the response should contain "Enter \"admin\" as username and \"password\" as password to access the CMS."
