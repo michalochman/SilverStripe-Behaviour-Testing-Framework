@@ -1,10 +1,22 @@
 # features/login.feature
-Feature: Login
-  In order to use the admin infrastructure
-  I need proper authorisation
+Feature: Log in
+  As an site owner
+  I want to access to the CMS to be secure
+  So that only my team can make content changes
 
+  Scenario: Bad login
+    When I log in with "bad@example.com" and "badpassword"
+    Then I will see a bad log-in message
+
+  Scenario: Valid login
+    Given I am logged in
+    Then I should see "Logged in as Default Admin"
+
+  @isolated
   Scenario: /admin/ redirect for not logged in user
-    Given I am on "/admin/"
+    # scenario is insulated, so we probably don't need the following check
+    Given I am not logged in
+    # disable automatic redirection so we can use the profiler
+    When I go to "/admin/" without redirection
     Then I should be redirected to "/Security/login"
-    And the response status code should be 200
-    And the response should contain "Enter \"admin\" as username and \"password\" as password to access the CMS."
+    And I should see a log-in form
