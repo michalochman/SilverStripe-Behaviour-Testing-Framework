@@ -51,3 +51,8 @@ Selenium will also try to use chrome browser. Refer to `behat.yml` for details.
 
 	# This will run all feature tests located in `features` directory
 	bin/behat
+
+## Useful resources
+
+* [SilverStripe CMS architecture](http://doc.silverstripe.org/sapphire/en/trunk/reference/cms-architecture)
+* [SilverStripe Framework Test Module](https://github.com/silverstripe-labs/silverstripe-frameworktest)
