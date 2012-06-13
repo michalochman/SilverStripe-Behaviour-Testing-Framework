@@ -102,7 +102,7 @@ class FeatureContext extends MinkContext
 		if (0 == strpos($this->getSession()->getCurrentUrl(), $this->context['base_url'] . $this->context['login_url']))
 		{
 			$this->stepILogInWith('admin', 'password');
-			assertEquals($this->context['base_url'] . $this->context['admin_url'], $this->getSession()->getCurrentUrl());
+			assertStringStartsWith($this->context['base_url'] . $this->context['admin_url'], $this->getSession()->getCurrentUrl());
 		}
 	}
 
@@ -132,11 +132,8 @@ class FeatureContext extends MinkContext
 	{
 		$page = $this->getSession()->getPage();
 
-		$form = $page->find('css', '[for=Form_EditForm_Title]');
+		$form = $page->find('css', '#Form_EditForm');
 		assertNotNull($form, 'I should see an edit page form');
-
-		$assumed_text = 'Page name';
-		assertEquals('Page name', $form->getText(), sprintf('Text should be %s, %s encountered', $assumed_text, $form->getText()));
 	}
 
 	/**
@@ -167,21 +164,36 @@ class FeatureContext extends MinkContext
 		
 		assertNotNull($bad_message, 'Bad message not found.');
 	}
-	
-	/**
-	 * @When /^I click "([^"]*)" in the CMS menu$/
-	 */
-	public function stepIClickInTheCmsMenu($link)
+
+	protected function getCmsTreeElement()
 	{
 		$page = $this->getSession()->getPage();
+		$cms_tree_element = $page->find('css', '.cms-tree');
+		assertNotNull($cms_tree_element, 'CMS tree not found');
 
-		$cms_menu = $page->find('css', '#MainMenu');
-		assertNotNull($cms_menu, 'CMS menu not found');
+		return $cms_tree_element;
+	}
 
-		$link_element = $cms_menu->findLink($link);
-		assertNotNull($link_element, sprintf('%s not found', $link));
+	/**
+	 * @When /^I should see "([^"]*)" in CMS Tree$/
+	 */
+	public function stepIShouldSeeInCmsTree($text)
+	{
+		$cms_tree_element = $this->getCmsTreeElement();
 
-		$link_element->click();
+		$element = $cms_tree_element->find('named', array('content', "'$text'"));
+		assertNotNull($element, sprintf('%s not found', $text));
+	}
+
+	/**
+	 * @When /^I should not see "([^"]*)" in CMS Tree$/
+	 */
+	public function stepIShouldNotSeeInCmsTree($text)
+	{
+		$cms_tree_element = $this->getCmsTreeElement();
+
+		$element = $cms_tree_element->find('named', array('content', "'$text'"));
+		assertNull($element, sprintf('%s found', $text));
 	}
 
 	/**
@@ -191,33 +203,68 @@ class FeatureContext extends MinkContext
 	{
 		$page = $this->getSession()->getPage();
 
-		$selector = sprintf('#%s button', $button);
-		$button_element = $page->find('css', $selector);
-		assertNotNull($button_element, sprintf('%s not found', $selector));
+		$button_element = $page->find('named', array('link_or_button', "'$button'"));
+		assertNotNull($button_element, sprintf('%s button not found', $button));
 
 		$button_element->click();
 	}
 
 	/**
-	 * @Given /^I submit "([^"]*)" form$/
+	 * @When /^I fill in content form with "([^"]*)"$/
 	 */
-	public function stepISubmitForm($id)
+	public function stepIFillInContentFormWith($content)
 	{
-		$page = $this->getSession()->getPage();
-
-		$selector = sprintf('#%s input[type=submit]', $id);
-		$submit_element = $page->find('css', $selector);
-		assertNotNull($submit_element, sprintf('%s not found', $selector));
-
-		$submit_element->click();
+		$this->getSession()->evaluateScript("tinyMCE.get('Form_EditForm_Content').setContent('$content')");
 	}
 
 	/**
-	 * @When /^I fill in "([^"]*)" tinyMCE with "([^"]*)"$/
+	 * @Then /^the content form should contain "([^"]*)"$/
 	 */
-	public function stepIFillInTinymceWith($id, $content)
+	public function theContentFormShouldContain($content)
 	{
-		$this->getSession()->evaluateScript("tinyMCE.get('$id').setContent('$content')");
+		$this->assertElementContains('#Form_EditForm_Content', $content);
 	}
 
+	/**
+	 * @Then /^I should see "([^"]*)" notice$/
+	 */
+	public function iShouldSeeNotice($notice)
+	{
+		$this->assertElementContains('.notice-wrap', $notice);
+	}
+
+	/**
+	 * @When /^I expand Filter CMS Panel$/
+	 */
+	public function iExpandFilterCmsPanel()
+	{
+		$page = $this->getSession()->getPage();
+
+		$panel_toggle_element = $page->find('css', '.cms-content > .cms-panel > .cms-panel-toggle > .toggle-expand');
+		assertNotNull($panel_toggle_element, 'Panel toggle not found');
+
+		if ($panel_toggle_element->isVisible())
+		{
+			$panel_toggle_element->click();
+		}
+	}
+
+	/**
+	 * @Then /^I can see the preview panel$/
+	 */
+	public function iCanSeeThePreviewPanel()
+	{
+		$this->assertElementOnPage('.cms-preview');
+	}
+
+	/**
+	 * @Given /^the preview contains "([^"]*)"$/
+	 */
+	public function thePreviewContains($content)
+	{
+		$driver = $this->getSession()->getDriver();
+		$driver->switchToIFrame('cms-preview-iframe');
+
+		$this->assertPageContainsText($content);
+	}
 }
