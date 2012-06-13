@@ -4,16 +4,18 @@ Feature: Search for a page
   So that I can efficiently navigate nested content structures
 
   # TODO:
-  # - Move selectors inside step definitions
   # - Move delays inside step definitions
   @javascript
   Scenario: I can search for a page by its title
     Given I am logged in
-    And I click "Pages" in the CMS menu
-    Then I should see "About Us" in the "#sitetree" element
-    When I press "search" button
-    And I fill in "SiteTreeSearchTerm" with "About Us"
-    And I press "SiteTreeSearchButton"
+    And I go to "/admin/pages"
     And I wait for "1000"
-    Then I should see "About Us" in the "#sitetree" element
-    And I should not see "Contact Us" in the "#sitetree" element
+    Then I should see "About Us" in CMS Tree
+    And I should see "Contact Us" in CMS Tree
+
+    When I expand Filter CMS Panel
+    And I fill in "Content" with "About Us"
+    And I press "Apply Filter" button
+    And I wait for "1000"
+    Then I should see "About Us" in CMS Tree
+    And I should not see "Contact Us" in CMS Tree
