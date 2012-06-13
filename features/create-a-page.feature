@@ -4,13 +4,15 @@ Feature: Create a page
   So that I can grow my website
 
   # TODO:
-  # - Move selectors inside step definitions
   # - Move delays inside step definitions
   @javascript
   Scenario: I can create a page from the pages section
     Given I am logged in
-  	And I click "Pages" in the CMS menu
-  	And I press "addpage" button
-    And I submit "Form_AddPageOptionsForm" form
+    And I go to "/admin/pages"
+    And I wait for "1000"
+  	When I press "Add new" button
+    And I check "Page"
+    And I wait for "1000"
+  	And I press "Create" button
     And I wait for "1000"
   	Then I should see an edit page form
