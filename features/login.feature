@@ -5,12 +5,12 @@ Feature: Log in
   So that only my team can make content changes
 
   Scenario: Bad login
-    When I log in with "bad@example.com" and "badpassword"
+    Given I log in with "bad@example.com" and "badpassword"
     Then I will see a bad log-in message
 
   Scenario: Valid login
     Given I am logged in
-    Then I should see "Logged in as Default Admin"
+    Then I should see "Hi"
 
   @isolated
   Scenario: /admin/ redirect for not logged in user
