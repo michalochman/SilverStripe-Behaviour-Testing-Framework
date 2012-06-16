@@ -18,4 +18,4 @@ Feature: Search for a page
     And I press "Apply Filter" button
     And I wait for "1000"
     Then I should see "About Us" in CMS Tree
-    And I should not see "Contact Us" in CMS Tree
+    But I should not see "Contact Us" in CMS Tree
