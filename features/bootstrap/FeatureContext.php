@@ -10,7 +10,7 @@ use Behat\Gherkin\Node\PyStringNode,
 use Behat\Behat\Context\Step;
 
 // Contexts
-require_once __DIR__ . '/SilverStripeContext.class.php';
+require_once __DIR__ . '/SilverStripeContext.php';
 
 // PHPUnit
 require_once 'PHPUnit/Autoload.php';
@@ -34,32 +34,8 @@ class FeatureContext extends SilverStripeContext
 		// Initialize your context here
 		$this->context = $parameters;
 
+		$this->useContext('BasicContext', new BasicContext($parameters));
 		$this->useContext('LoginContext', new LoginContext($parameters));
-	}
-
-	/**
-	 * @Then /^I should be redirected to ([^ ]+)/
-	 */
-	public function stepIShouldBeRedirectedTo($url)
-	{
-		if ($this->canIntercept())
-		{
-			$client = $this->getSession()->getDriver()->getClient();
-			$client->followRedirects(true);
-			$client->followRedirect();
-
-			$url = $this->context['base_url'] . trim($url, '"');
-
-			assertTrue($this->isCurrentUrlSimilarTo($url), sprintf('Current URL is not %s', $url));
-		}
-	}
-
-	/**
-	 * @Given /^I wait for "(\d+)"$/
-	 */
-	public function stepIWaitFor($ms)
-	{
-		$this->getSession()->wait($ms);
 	}
 
 	/**
