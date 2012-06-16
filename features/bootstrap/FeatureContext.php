@@ -137,6 +137,16 @@ class FeatureContext extends SilverStripeContext
 		assertNotNull($bad_message, 'Bad message not found.');
 	}
 
+	/**
+	 * @Then /^I should see the CMS$/
+	 */
+	public function iShouldSeeTheCms()
+	{
+		$page = $this->getSession()->getPage();
+		$cms_element = $page->find('css', '.cms');
+		assertNotNull($cms_element, 'CMS not found');
+	}
+
 	protected function getCmsTreeElement()
 	{
 		$page = $this->getSession()->getPage();

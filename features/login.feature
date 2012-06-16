@@ -10,7 +10,7 @@ Feature: Log in
 
   Scenario: Valid login
     Given I am logged in
-    Then I should see "Hi"
+    Then I should see the CMS
 
   @isolated
   Scenario: /admin/ redirect for not logged in user
