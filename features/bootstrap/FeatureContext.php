@@ -60,37 +60,6 @@ class FeatureContext extends SilverStripeContext
 		assertNotNull($cms_element, 'CMS not found');
 	}
 
-	protected function getCmsTreeElement()
-	{
-		$page = $this->getSession()->getPage();
-		$cms_tree_element = $page->find('css', '.cms-tree');
-		assertNotNull($cms_tree_element, 'CMS tree not found');
-
-		return $cms_tree_element;
-	}
-
-	/**
-	 * @When /^I should see "([^"]*)" in CMS Tree$/
-	 */
-	public function stepIShouldSeeInCmsTree($text)
-	{
-		$cms_tree_element = $this->getCmsTreeElement();
-
-		$element = $cms_tree_element->find('named', array('content', "'$text'"));
-		assertNotNull($element, sprintf('%s not found', $text));
-	}
-
-	/**
-	 * @When /^I should not see "([^"]*)" in CMS Tree$/
-	 */
-	public function stepIShouldNotSeeInCmsTree($text)
-	{
-		$cms_tree_element = $this->getCmsTreeElement();
-
-		$element = $cms_tree_element->find('named', array('content', "'$text'"));
-		assertNull($element, sprintf('%s found', $text));
-	}
-
 	/**
 	 * @When /^I fill in content form with "([^"]*)"$/
 	 */
