@@ -7,11 +7,7 @@ use Behat\Behat\Context\ClosuredContextInterface,
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
 
-use Behat\MinkExtension\Context\MinkContext;
 use Behat\Behat\Context\Step;
-use Behat\Mink\Exception\UnsupportedDriverActionException;
-use Behat\Mink\Driver\GoutteDriver;
-use Behat\Mink\Driver\Selenium2Driver;
 
 // Contexts
 require_once __DIR__ . '/SilverStripeContext.class.php';
@@ -37,6 +33,8 @@ class FeatureContext extends SilverStripeContext
 	{	
 		// Initialize your context here
 		$this->context = $parameters;
+
+		$this->useContext('LoginContext', new LoginContext($parameters));
 	}
 
 	/**
@@ -65,39 +63,6 @@ class FeatureContext extends SilverStripeContext
 	}
 
 	/**
-	 * @Given /^I am logged in$/
-	 */
-	public function stepIAmLoggedIn()
-	{
-		$this->getSession()->visit($this->context['base_url'] . $this->context['admin_url']);
-
-		if (0 == strpos($this->getSession()->getCurrentUrl(), $this->context['base_url'] . $this->context['login_url']))
-		{
-			$this->stepILogInWith('admin', 'password');
-			assertStringStartsWith($this->context['base_url'] . $this->context['admin_url'], $this->getSession()->getCurrentUrl());
-		}
-	}
-
-	/**
-	 * @Given /^I am not logged in$/
-	 */
-	public function stepIAmNotLoggedIn()
-	{
-		$this->getSession()->reset();
-	}
-
-	/**
-	 * @Given /^I should see a log-in form$/
-	 */
-  public function stepIShouldSeeALogInForm()
-  {
-    $page = $this->getSession()->getPage();
-
-		$login_form = $page->find('css', '#MemberLoginForm_LoginForm');
-	  assertNotNull($login_form, 'I should see a log-in form');
-  }
-
-	/**
 	 * @Then /^I should see an edit page form$/
 	 */
 	public function stepIShouldSeeAnEditPageForm()
@@ -106,35 +71,6 @@ class FeatureContext extends SilverStripeContext
 
 		$form = $page->find('css', '#Form_EditForm');
 		assertNotNull($form, 'I should see an edit page form');
-	}
-
-	/**
-	 * @When /^I log in with "([^"]*)" and "([^"]*)"$/
-	 */
-	public function stepILogInWith($email, $password)
-	{
-		$this->getSession()->visit($this->context['base_url'] . $this->context['login_url']);
-		
-		$page = $this->getSession()->getPage();
-
-		$email_field = $page->find('css', '[name=Email]');
-		$password_field = $page->find('css', '[name=Password]');
-		$submit_button = $page->find('css', '[type=submit]');
-		$email_field->setValue($email);
-		$password_field->setValue($password);
-		$submit_button->press();
-	}
-
-	/**
-	 * @Then /^I will see a bad log-in message$/
-	 */
-	public function stepIWillSeeABadLogInMessage()
-	{
-		$page = $this->getSession()->getPage();
-
-		$bad_message = $page->find('css', '.message.bad');
-		
-		assertNotNull($bad_message, 'Bad message not found.');
 	}
 
 	/**
