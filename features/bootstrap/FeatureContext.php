@@ -36,6 +36,7 @@ class FeatureContext extends SilverStripeContext
 
 		$this->useContext('BasicContext', new BasicContext($parameters));
 		$this->useContext('LoginContext', new LoginContext($parameters));
+		$this->useContext('CmsPreviewContext', new CmsPreviewContext($parameters));
 	}
 
 	/**
@@ -141,24 +142,5 @@ class FeatureContext extends SilverStripeContext
 		{
 			$panel_toggle_element->click();
 		}
-	}
-
-	/**
-	 * @Then /^I can see the preview panel$/
-	 */
-	public function iCanSeeThePreviewPanel()
-	{
-		$this->assertElementOnPage('.cms-preview');
-	}
-
-	/**
-	 * @Given /^the preview contains "([^"]*)"$/
-	 */
-	public function thePreviewContains($content)
-	{
-		$driver = $this->getSession()->getDriver();
-		$driver->switchToIFrame('cms-preview-iframe');
-
-		$this->assertPageContainsText($content);
 	}
 }
