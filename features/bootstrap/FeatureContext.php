@@ -13,17 +13,17 @@ use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Behat\Mink\Driver\GoutteDriver;
 use Behat\Mink\Driver\Selenium2Driver;
 
+// Contexts
+require_once __DIR__ . '/SilverStripeContext.class.php';
+
 // PHPUnit
 require_once 'PHPUnit/Autoload.php';
 require_once 'PHPUnit/Framework/Assert/Functions.php';
 
-// Mink etc.
-require_once 'vendor/autoload.php';
-
 /**
  * Features context.
  */
-class FeatureContext extends MinkContext
+class FeatureContext extends SilverStripeContext
 {	
 	protected $context;
 	
@@ -39,34 +39,6 @@ class FeatureContext extends MinkContext
 		$this->context = $parameters;
 	}
 
-	public function canIntercept()
-	{
-		$driver = $this->getSession()->getDriver();
-		if ($driver instanceof GoutteDriver)
-		{
-			return true;
-		}
-		else if ($driver instanceof Selenium2Driver)
-		{
-			return false;
-		}
-
-		throw new UnsupportedDriverActionException('You need to tag the scenario with "@mink:goutte" or "@mink:symfony". Intercepting the redirections is not supported by %s', $driver);
-	}
-	
-	/**
-	 * @Given /^(.*) without redirection$/
-	 */
-	public function theRedirectionsAreIntercepted($step)
-	{
-		if ($this->canIntercept())
-		{
-			$this->getSession()->getDriver()->getClient()->followRedirects(false);
-		}
-
-		return new Step\Given($step);
-	}
-
 	/**
 	 * @Then /^I should be redirected to ([^ ]+)/
 	 */
@@ -80,7 +52,7 @@ class FeatureContext extends MinkContext
 
 			$url = $this->context['base_url'] . trim($url, '"');
 
-			assertStringStartsWith($url, $this->getSession()->getCurrentUrl(), sprintf('Current URL is not %s', $url));
+			assertTrue($this->isCurrentUrlSimilarTo($url), sprintf('Current URL is not %s', $url));
 		}
 	}
 
