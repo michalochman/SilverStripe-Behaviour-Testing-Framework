@@ -92,19 +92,6 @@ class FeatureContext extends SilverStripeContext
 	}
 
 	/**
-	 * @Given /^I press "([^"]*)" button$/
-	 */
-	public function stepIPressButton($button)
-	{
-		$page = $this->getSession()->getPage();
-
-		$button_element = $page->find('named', array('link_or_button', "'$button'"));
-		assertNotNull($button_element, sprintf('%s button not found', $button));
-
-		$button_element->click();
-	}
-
-	/**
 	 * @When /^I fill in content form with "([^"]*)"$/
 	 */
 	public function stepIFillInContentFormWith($content)
