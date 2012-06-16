@@ -36,35 +36,10 @@ class FeatureContext extends SilverStripeContext
 
 		$this->useContext('BasicContext', new BasicContext($parameters));
 		$this->useContext('LoginContext', new LoginContext($parameters));
-		$this->useContext('CmsTreeContext', new CmsTreeContext($parameters));
+		$this->useContext('CmsFormsContext', new CmsFormsContext($parameters));
 		$this->useContext('CmsPanelContext', new CmsPanelContext($parameters));
 		$this->useContext('CmsPreviewContext', new CmsPreviewContext($parameters));
+		$this->useContext('CmsTreeContext', new CmsTreeContext($parameters));
 	}
 
-	/**
-	 * @Then /^I should see an edit page form$/
-	 */
-	public function stepIShouldSeeAnEditPageForm()
-	{
-		$page = $this->getSession()->getPage();
-
-		$form = $page->find('css', '#Form_EditForm');
-		assertNotNull($form, 'I should see an edit page form');
-	}
-
-	/**
-	 * @When /^I fill in content form with "([^"]*)"$/
-	 */
-	public function stepIFillInContentFormWith($content)
-	{
-		$this->getSession()->evaluateScript("tinyMCE.get('Form_EditForm_Content').setContent('$content')");
-	}
-
-	/**
-	 * @Then /^the content form should contain "([^"]*)"$/
-	 */
-	public function theContentFormShouldContain($content)
-	{
-		$this->assertElementContains('#Form_EditForm_Content', $content);
-	}
 }
