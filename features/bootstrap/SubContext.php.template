@@ -44,5 +44,5 @@ class SubContext extends BehatContext
 	 * Write your subcontext methods below.
 	 * Remember that this class extends BehatContext, not MinkContext
 	 */
-	 
+
 }
