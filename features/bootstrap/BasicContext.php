@@ -80,7 +80,7 @@ class BasicContext extends BehatContext
 	 */
 	public function iShouldSeeNotice($notice)
 	{
-		$this->assertElementContains('.notice-wrap', $notice);
+		$this->getMainContext()->assertElementContains('.notice-wrap', $notice);
 	}
 
 	/**

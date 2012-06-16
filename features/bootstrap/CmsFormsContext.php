@@ -64,7 +64,7 @@ class CmsFormsContext extends BehatContext
 	 */
 	public function theContentFormShouldContain($content)
 	{
-		$this->assertElementContains('#Form_EditForm_Content', $content);
+		$this->getMainContext()->assertElementContains('#Form_EditForm_Content', $content);
 	}
 
 }
