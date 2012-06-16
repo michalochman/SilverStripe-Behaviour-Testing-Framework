@@ -3,29 +3,24 @@ Feature: Edit a page
   I want to edit a page in the CMS
   So that I correct errors and provide new information
 
-  # TODO:
-  # - Move delays inside step definitions
-  @javascript
-  Scenario: I can open a page for editing from the pages tree
+  Background:
     Given I am logged in
     And I go to "/admin/pages"
     And I wait for "1000"
     Then I should see "About Us" in CMS Tree
 
+  # TODO:
+  # - Move delays inside step definitions
+  @javascript
+  Scenario: I can open a page for editing from the pages tree
     When I follow "About Us"
     And I wait for "1000"
     Then I should see an edit page form
 
   # TODO:
   # - Move delays inside step definitions
-  # - Try to reuse "I can open a page for editing from the pages tree" scenario here if possible
   @javascript
   Scenario: I can edit title and content and see the changes on draft
-    Given I am logged in
-    And I go to "/admin/pages"
-    And I wait for "1000"
-    Then I should see "About Us" in CMS Tree
-
     When I follow "About Us"
     And I wait for "1000"
     Then I should see an edit page form
