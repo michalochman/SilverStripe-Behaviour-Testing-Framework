@@ -121,14 +121,6 @@ class FeatureContext extends SilverStripeContext
 	}
 
 	/**
-	 * @Then /^I should see "([^"]*)" notice$/
-	 */
-	public function iShouldSeeNotice($notice)
-	{
-		$this->assertElementContains('.notice-wrap', $notice);
-	}
-
-	/**
 	 * @When /^I expand Filter CMS Panel$/
 	 */
 	public function iExpandFilterCmsPanel()

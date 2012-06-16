@@ -64,4 +64,12 @@ class BasicContext extends BehatContext
 	{
 		$this->getSession()->wait($ms);
 	}
+
+	/**
+	 * @Then /^I should see "([^"]*)" notice$/
+	 */
+	public function iShouldSeeNotice($notice)
+	{
+		$this->assertElementContains('.notice-wrap', $notice);
+	}
 }
