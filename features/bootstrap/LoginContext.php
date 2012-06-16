@@ -7,7 +7,6 @@ Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode,
 Behat\Gherkin\Node\TableNode;
 
-use Behat\MinkExtension\Context\MinkContext;
 use Behat\Behat\Context\Step;
 
 // PHPUnit
