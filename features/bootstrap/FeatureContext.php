@@ -36,6 +36,8 @@ class FeatureContext extends SilverStripeContext
 
 		$this->useContext('BasicContext', new BasicContext($parameters));
 		$this->useContext('LoginContext', new LoginContext($parameters));
+		$this->useContext('CmsTreeContext', new CmsTreeContext($parameters));
+		$this->useContext('CmsPanelContext', new CmsPanelContext($parameters));
 		$this->useContext('CmsPreviewContext', new CmsPreviewContext($parameters));
 	}
 
@@ -64,21 +66,5 @@ class FeatureContext extends SilverStripeContext
 	public function theContentFormShouldContain($content)
 	{
 		$this->assertElementContains('#Form_EditForm_Content', $content);
-	}
-
-	/**
-	 * @When /^I expand Filter CMS Panel$/
-	 */
-	public function iExpandFilterCmsPanel()
-	{
-		$page = $this->getSession()->getPage();
-
-		$panel_toggle_element = $page->find('css', '.cms-content > .cms-panel > .cms-panel-toggle > .toggle-expand');
-		assertNotNull($panel_toggle_element, 'Panel toggle not found');
-
-		if ($panel_toggle_element->isVisible())
-		{
-			$panel_toggle_element->click();
-		}
 	}
 }
