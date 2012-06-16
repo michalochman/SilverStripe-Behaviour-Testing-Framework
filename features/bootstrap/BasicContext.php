@@ -66,6 +66,16 @@ class BasicContext extends BehatContext
 	}
 
 	/**
+	 * @Then /^I should see the CMS$/
+	 */
+	public function iShouldSeeTheCms()
+	{
+		$page = $this->getSession()->getPage();
+		$cms_element = $page->find('css', '.cms');
+		assertNotNull($cms_element, 'CMS not found');
+	}
+
+	/**
 	 * @Then /^I should see "([^"]*)" notice$/
 	 */
 	public function iShouldSeeNotice($notice)

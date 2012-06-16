@@ -51,16 +51,6 @@ class FeatureContext extends SilverStripeContext
 	}
 
 	/**
-	 * @Then /^I should see the CMS$/
-	 */
-	public function iShouldSeeTheCms()
-	{
-		$page = $this->getSession()->getPage();
-		$cms_element = $page->find('css', '.cms');
-		assertNotNull($cms_element, 'CMS not found');
-	}
-
-	/**
 	 * @When /^I fill in content form with "([^"]*)"$/
 	 */
 	public function stepIFillInContentFormWith($content)
