@@ -56,3 +56,4 @@ Selenium will also try to use chrome browser. Refer to `behat.yml` for details.
 
 * [SilverStripe CMS architecture](http://doc.silverstripe.org/sapphire/en/trunk/reference/cms-architecture)
 * [SilverStripe Framework Test Module](https://github.com/silverstripe-labs/silverstripe-frameworktest)
+* [SilverStripe Unit and Integration Testing](http://doc.silverstripe.org/sapphire/en/trunk/topics/testing)
