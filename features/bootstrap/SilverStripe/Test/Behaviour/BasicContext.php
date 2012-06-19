@@ -42,6 +42,33 @@ class BasicContext extends BehatContext
 		return $this->getMainContext()->getSession($name);
 	}
 
+	public function ajaxClickHandler_before() {
+		$javascript = <<<JS
+window.jQuery(document).on('ajaxStart', function(){
+	window.__ajaxStatus = function() {
+		return 'waiting';
+	};
+});
+window.jQuery(document).on('ajaxComplete', function(){
+	window.__ajaxStatus = function() {
+		return 'no ajax';
+	};
+});
+window.jQuery(document).on('ajaxSuccess', function(){
+	window.__ajaxStatus = function() {
+		return 'success';
+	};
+});
+JS;
+		$this->getSession()->executeScript($javascript);
+	}
+
+	public function ajaxClickHandler_after() {
+		$this->getSession()->wait(5000,
+			"(typeof window.__ajaxStatus !== 'undefined' ? window.__ajaxStatus() : 'no ajax') !== 'waiting'"
+		);
+	}
+
 	/**
 	 * @Then /^I should be redirected to ([^ ]+)/
 	 */
@@ -95,6 +122,8 @@ class BasicContext extends BehatContext
 		$button_element = $page->find('named', array('link_or_button', "'$button'"));
 		assertNotNull($button_element, sprintf('%s button not found', $button));
 
+		$this->ajaxClickHandler_before();
 		$button_element->click();
+		$this->ajaxClickHandler_after();
 	}
 }
