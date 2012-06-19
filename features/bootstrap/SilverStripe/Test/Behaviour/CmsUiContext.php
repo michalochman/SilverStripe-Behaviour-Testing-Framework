@@ -42,8 +42,11 @@ class CmsUiContext extends BehatContext
 		return $this->getMainContext()->getSession($name);
 	}
 
+
 	protected function getCmsTreeElement()
 	{
+		$this->getSession()->wait(5000, "window.jQuery('.cms-tree').size() > 0");
+
 		$page = $this->getSession()->getPage();
 		$cms_tree_element = $page->find('css', '.cms-tree');
 		assertNotNull($cms_tree_element, 'CMS tree not found');
