@@ -42,6 +42,28 @@ class BasicContext extends BehatContext
 		return $this->getMainContext()->getSession($name);
 	}
 
+	/**
+	 * @BeforeStep
+	 */
+	public function beforeStep($event)
+	{
+		if (preg_match('/(press|click|submit)/i', $event->getStep()->getText()))
+		{
+			$this->ajaxClickHandler_before();
+		}
+	}
+
+	/**
+	 * @AfterStep
+	 */
+	public function afterStep($event)
+	{
+		if (preg_match('/(press|click|submit)/i', $event->getStep()->getText()))
+		{
+			$this->ajaxClickHandler_after();
+		}
+	}
+
 	public function ajaxClickHandler_before() {
 		$javascript = <<<JS
 window.jQuery(document).on('ajaxStart', function(){
@@ -128,8 +150,6 @@ JS;
 		$button_element = $page->find('named', array('link_or_button', "'$button'"));
 		assertNotNull($button_element, sprintf('%s button not found', $button));
 
-		$this->ajaxClickHandler_before();
 		$button_element->click();
-		$this->ajaxClickHandler_after();
 	}
 }
