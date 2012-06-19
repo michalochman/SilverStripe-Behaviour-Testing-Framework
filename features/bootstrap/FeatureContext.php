@@ -9,8 +9,16 @@ use Behat\Gherkin\Node\PyStringNode,
 
 use Behat\Behat\Context\Step;
 
+use SilverStripe\Test\Behaviour\SilverStripeContext,
+    SilverStripe\Test\Behaviour\BasicContext,
+    SilverStripe\Test\Behaviour\LoginContext,
+    SilverStripe\Test\Behaviour\CmsFormsContext,
+    SilverStripe\Test\Behaviour\CmsPanelContext,
+    SilverStripe\Test\Behaviour\CmsPreviewContext,
+    SilverStripe\Test\Behaviour\CmsTreeContext;
+
 // Contexts
-require_once __DIR__ . '/SilverStripeContext.php';
+require_once __DIR__ . '/SilverStripe/Test/Behaviour/SilverStripeContext.php';
 
 // PHPUnit
 require_once 'PHPUnit/Autoload.php';

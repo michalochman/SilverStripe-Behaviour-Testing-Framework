@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Test\Behaviour;
+
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Behat\Context\Step;
 use Behat\Mink\Exception\UnsupportedDriverActionException;

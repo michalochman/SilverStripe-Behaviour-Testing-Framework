@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Test\Behaviour;
+
 use Behat\Behat\Context\ClosuredContextInterface,
 Behat\Behat\Context\TranslatedContextInterface,
 Behat\Behat\Context\BehatContext,
@@ -16,7 +18,7 @@ require_once 'PHPUnit/Framework/Assert/Functions.php';
 /**
  * Features context.
  */
-class CmsPreviewContext extends BehatContext
+class CmsTreeContext extends BehatContext
 {
 	protected $context;
 
@@ -40,22 +42,35 @@ class CmsPreviewContext extends BehatContext
 		return $this->getMainContext()->getSession($name);
 	}
 
-	/**
-	 * @Then /^I can see the preview panel$/
-	 */
-	public function iCanSeeThePreviewPanel()
+	protected function getCmsTreeElement()
 	{
-		$this->getMainContext()->assertElementOnPage('.cms-preview');
+		$page = $this->getSession()->getPage();
+		$cms_tree_element = $page->find('css', '.cms-tree');
+		assertNotNull($cms_tree_element, 'CMS tree not found');
+
+		return $cms_tree_element;
 	}
 
 	/**
-	 * @Given /^the preview contains "([^"]*)"$/
+	 * @When /^I should see "([^"]*)" in CMS Tree$/
 	 */
-	public function thePreviewContains($content)
+	public function stepIShouldSeeInCmsTree($text)
 	{
-		$driver = $this->getSession()->getDriver();
-		$driver->switchToIFrame('cms-preview-iframe');
+		$cms_tree_element = $this->getCmsTreeElement();
 
-		$this->getMainContext()->assertPageContainsText($content);
+		$element = $cms_tree_element->find('named', array('content', "'$text'"));
+		assertNotNull($element, sprintf('%s not found', $text));
 	}
+
+	/**
+	 * @When /^I should not see "([^"]*)" in CMS Tree$/
+	 */
+	public function stepIShouldNotSeeInCmsTree($text)
+	{
+		$cms_tree_element = $this->getCmsTreeElement();
+
+		$element = $cms_tree_element->find('named', array('content', "'$text'"));
+		assertNull($element, sprintf('%s found', $text));
+	}
+
 }
