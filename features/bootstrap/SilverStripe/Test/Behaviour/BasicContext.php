@@ -67,6 +67,12 @@ JS;
 		$this->getSession()->wait(5000,
 			"(typeof window.__ajaxStatus !== 'undefined' ? window.__ajaxStatus() : 'no ajax') !== 'waiting'"
 		);
+		$javascript = <<<JS
+window.jQuery(document).off('ajaxStart');
+window.jQuery(document).off('ajaxComplete');
+window.jQuery(document).off('ajaxSuccess');
+JS;
+		$this->getSession()->executeScript($javascript);
 	}
 
 	/**
