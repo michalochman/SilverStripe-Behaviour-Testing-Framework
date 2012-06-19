@@ -18,7 +18,7 @@ require_once 'PHPUnit/Framework/Assert/Functions.php';
 /**
  * Features context.
  */
-class CmsTreeContext extends BehatContext
+class CmsUiContext extends BehatContext
 {
 	protected $context;
 
@@ -71,6 +71,22 @@ class CmsTreeContext extends BehatContext
 
 		$element = $cms_tree_element->find('named', array('content', "'$text'"));
 		assertNull($element, sprintf('%s found', $text));
+	}
+
+	/**
+	 * @When /^I expand Filter CMS Panel$/
+	 */
+	public function iExpandFilterCmsPanel()
+	{
+		$page = $this->getSession()->getPage();
+
+		$panel_toggle_element = $page->find('css', '.cms-content > .cms-panel > .cms-panel-toggle > .toggle-expand');
+		assertNotNull($panel_toggle_element, 'Panel toggle not found');
+
+		if ($panel_toggle_element->isVisible())
+		{
+			$panel_toggle_element->click();
+		}
 	}
 
 }
