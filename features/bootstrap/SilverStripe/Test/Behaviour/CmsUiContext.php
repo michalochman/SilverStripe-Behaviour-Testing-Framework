@@ -93,4 +93,23 @@ class CmsUiContext extends BehatContext
 		}
 	}
 
+	/**
+	 * @Then /^I can see the preview panel$/
+	 */
+	public function iCanSeeThePreviewPanel()
+	{
+		$this->getMainContext()->assertElementOnPage('.cms-preview');
+	}
+
+	/**
+	 * @Given /^the preview contains "([^"]*)"$/
+	 */
+	public function thePreviewContains($content)
+	{
+		$driver = $this->getSession()->getDriver();
+		$driver->switchToIFrame('cms-preview-iframe');
+
+		$this->getMainContext()->assertPageContainsText($content);
+	}
+
 }

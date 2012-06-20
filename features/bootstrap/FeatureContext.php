@@ -13,7 +13,6 @@ use SilverStripe\Test\Behaviour\SilverStripeContext,
     SilverStripe\Test\Behaviour\BasicContext,
     SilverStripe\Test\Behaviour\LoginContext,
     SilverStripe\Test\Behaviour\CmsFormsContext,
-    SilverStripe\Test\Behaviour\CmsPreviewContext,
     SilverStripe\Test\Behaviour\CmsUiContext;
 
 // Contexts
@@ -47,7 +46,6 @@ class FeatureContext extends SilverStripeContext
 		$this->useContext('BasicContext', new BasicContext($parameters));
 		$this->useContext('LoginContext', new LoginContext($parameters));
 		$this->useContext('CmsFormsContext', new CmsFormsContext($parameters));
-		$this->useContext('CmsPreviewContext', new CmsPreviewContext($parameters));
 		$this->useContext('CmsUiContext', new CmsUiContext($parameters));
 	}
 
