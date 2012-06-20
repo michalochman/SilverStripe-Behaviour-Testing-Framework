@@ -7,13 +7,10 @@ Feature: Preview a page
   Scenario: I can show a preview of the current page from the pages section
     Given I am logged in
     And I go to "/admin/pages"
-    And I wait for "1000"
     Then I should see "About Us" in CMS Tree
 
     When I follow "About Us"
-    And I wait for "1000"
     And I press "Preview »" button
-    And I wait for "1000"
     Then I can see the preview panel
     And the preview contains "About Us"
 
