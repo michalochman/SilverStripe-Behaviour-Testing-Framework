@@ -62,6 +62,17 @@ class CmsUiContext extends BehatContext
 		$this->getMainContext()->assertElementContains('.notice-wrap', $notice);
 	}
 
+	protected function getCmsContentToolbarElement()
+	{
+		$this->getSession()->wait(5000, "window.jQuery('.cms-content-toolbar').size() > 0");
+
+		$page = $this->getSession()->getPage();
+		$cms_content_toolbar_element = $page->find('css', '.cms-content-toolbar');
+		assertNotNull($cms_content_toolbar_element, 'CMS content toolbar not found');
+
+		return $cms_content_toolbar_element;
+	}
+
 	protected function getCmsTreeElement()
 	{
 		$this->getSession()->wait(5000, "window.jQuery('.cms-tree').size() > 0");
@@ -71,6 +82,17 @@ class CmsUiContext extends BehatContext
 		assertNotNull($cms_tree_element, 'CMS tree not found');
 
 		return $cms_tree_element;
+	}
+
+	/**
+	 * @Given /^I should see "([^"]*)" button in CMS Content Toolbar$/
+	 */
+	public function iShouldSeeButtonInCmsContentToolbar($text)
+	{
+		$cms_content_toolbar_element = $this->getCmsContentToolbarElement();
+
+		$element = $cms_content_toolbar_element->find('named', array('link_or_button', "'$text'"));
+		assertNotNull($element, sprintf('%s button not found', $text));
 	}
 
 	/**

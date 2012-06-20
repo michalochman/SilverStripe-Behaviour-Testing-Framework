@@ -9,6 +9,7 @@ Feature: Create a page
   Scenario: I can create a page from the pages section
     Given I am logged in
     And I go to "/admin/pages"
+    And I should see "Add new" button in CMS Content Toolbar
   	When I press "Add new" button
     And I check "Page"
   	And I press "Create" button
