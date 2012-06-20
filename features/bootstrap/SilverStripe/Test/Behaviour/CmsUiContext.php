@@ -44,7 +44,6 @@ class CmsUiContext extends BehatContext
 		return $this->getMainContext()->getSession($name);
 	}
 
-
 	protected function getCmsTreeElement()
 	{
 		$this->getSession()->wait(5000, "window.jQuery('.cms-tree').size() > 0");
