@@ -9,10 +9,7 @@ Feature: Create a page
   Scenario: I can create a page from the pages section
     Given I am logged in
     And I go to "/admin/pages"
-    And I wait for "1000"
   	When I press "Add new" button
     And I check "Page"
-    And I wait for "1000"
   	And I press "Create" button
-    And I wait for "1000"
   	Then I should see an edit page form
