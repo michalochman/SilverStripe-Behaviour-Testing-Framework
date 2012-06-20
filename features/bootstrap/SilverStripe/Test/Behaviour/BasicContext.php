@@ -52,7 +52,7 @@ class BasicContext extends BehatContext
 	 */
 	public function beforeStep($event)
 	{
-		if (preg_match('/(press|click|submit)/i', $event->getStep()->getText()))
+		if (preg_match('/(follow|press|click|submit)/i', $event->getStep()->getText()))
 		{
 			$this->ajaxClickHandler_before();
 		}
@@ -63,7 +63,7 @@ class BasicContext extends BehatContext
 	 */
 	public function afterStep($event)
 	{
-		if (preg_match('/(press|click|submit)/i', $event->getStep()->getText()))
+		if (preg_match('/(follow|press|click|submit)/i', $event->getStep()->getText()))
 		{
 			$this->ajaxClickHandler_after();
 		}
