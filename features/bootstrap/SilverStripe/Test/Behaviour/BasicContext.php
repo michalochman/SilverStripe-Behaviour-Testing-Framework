@@ -71,17 +71,17 @@ class BasicContext extends BehatContext
 
 	public function ajaxClickHandler_before() {
 		$javascript = <<<JS
-window.jQuery(document).on('ajaxStart', function(){
+window.jQuery(document).on('ajaxStart.ss.test.behaviour', function(){
 	window.__ajaxStatus = function() {
 		return 'waiting';
 	};
 });
-window.jQuery(document).on('ajaxComplete', function(){
+window.jQuery(document).on('ajaxComplete.ss.test.behaviour', function(){
 	window.__ajaxStatus = function() {
 		return 'no ajax';
 	};
 });
-window.jQuery(document).on('ajaxSuccess', function(){
+window.jQuery(document).on('ajaxSuccess.ss.test.behaviour', function(){
 	window.__ajaxStatus = function() {
 		return 'success';
 	};
@@ -95,9 +95,9 @@ JS;
 			"(typeof window.__ajaxStatus !== 'undefined' ? window.__ajaxStatus() : 'no ajax') !== 'waiting'"
 		);
 		$javascript = <<<JS
-window.jQuery(document).off('ajaxStart');
-window.jQuery(document).off('ajaxComplete');
-window.jQuery(document).off('ajaxSuccess');
+window.jQuery(document).off('ajaxStart.ss.test.behaviour');
+window.jQuery(document).off('ajaxComplete.ss.test.behaviour');
+window.jQuery(document).off('ajaxSuccess.ss.test.behaviour');
 JS;
 		$this->getSession()->executeScript($javascript);
 	}
