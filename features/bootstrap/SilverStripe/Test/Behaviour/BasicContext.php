@@ -128,24 +128,6 @@ JS;
 	}
 
 	/**
-	 * @Then /^I should see the CMS$/
-	 */
-	public function iShouldSeeTheCms()
-	{
-		$page = $this->getSession()->getPage();
-		$cms_element = $page->find('css', '.cms');
-		assertNotNull($cms_element, 'CMS not found');
-	}
-
-	/**
-	 * @Then /^I should see "([^"]*)" notice$/
-	 */
-	public function iShouldSeeNotice($notice)
-	{
-		$this->getMainContext()->assertElementContains('.notice-wrap', $notice);
-	}
-
-	/**
 	 * @Given /^I press "([^"]*)" button$/
 	 */
 	public function stepIPressButton($button)
