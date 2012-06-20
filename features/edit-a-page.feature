@@ -26,7 +26,7 @@ Feature: Edit a page
     And I fill in content form with "my new content"
     And I press "Save Draft" button
     # The following can cause problems, as the flash message disappears quickly
-#    Then I should see "Saved." notice
+    Then I should see "Saved." notice
 
     When I follow "About Us"
     Then the "Title" field should contain "About Us!"
