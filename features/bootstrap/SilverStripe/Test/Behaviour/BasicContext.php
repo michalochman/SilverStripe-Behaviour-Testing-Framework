@@ -76,15 +76,19 @@ window.jQuery(document).on('ajaxStart.ss.test.behaviour', function(){
 		return 'waiting';
 	};
 });
-window.jQuery(document).on('ajaxComplete.ss.test.behaviour', function(){
-	window.__ajaxStatus = function() {
-		return 'no ajax';
-	};
+window.jQuery(document).on('ajaxComplete.ss.test.behaviour', function(e, jqXHR){
+	if (null === jqXHR.getResponseHeader('X-ControllerURL')) {
+		window.__ajaxStatus = function() {
+			return 'no ajax';
+		};
+	}
 });
-window.jQuery(document).on('ajaxSuccess.ss.test.behaviour', function(){
-	window.__ajaxStatus = function() {
-		return 'success';
-	};
+window.jQuery(document).on('ajaxSuccess.ss.test.behaviour', function(e, jqXHR){
+	if (null === jqXHR.getResponseHeader('X-ControllerURL')) {
+		window.__ajaxStatus = function() {
+			return 'success';
+		};
+	}
 });
 JS;
 		$this->getSession()->executeScript($javascript);
