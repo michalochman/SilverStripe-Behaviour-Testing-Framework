@@ -48,22 +48,22 @@ class BasicContext extends BehatContext
 	}
 
 	/**
-	 * @BeforeStep
+	 * @BeforeStep @javascript
 	 */
 	public function beforeStep($event)
 	{
-		if (preg_match('/(follow|press|click|submit)/i', $event->getStep()->getText()))
+		if (preg_match('/(go to|follow|press|click|submit)/i', $event->getStep()->getText()))
 		{
 			$this->ajaxClickHandler_before();
 		}
 	}
 
 	/**
-	 * @AfterStep
+	 * @AfterStep @javascript
 	 */
 	public function afterStep($event)
 	{
-		if (preg_match('/(follow|press|click|submit)/i', $event->getStep()->getText()))
+		if (preg_match('/(go to|follow|press|click|submit)/i', $event->getStep()->getText()))
 		{
 			$this->ajaxClickHandler_after();
 		}
