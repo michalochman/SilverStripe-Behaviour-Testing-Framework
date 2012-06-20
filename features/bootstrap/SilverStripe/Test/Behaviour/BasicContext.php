@@ -69,21 +69,26 @@ class BasicContext extends BehatContext
 		}
 	}
 
+	/**
+	 * Hook into jQuery ajaxStart, ajaxSuccess and ajaxComplete events.
+	 * Prepare __ajaxStatus() functions and attach them to these handlers.
+	 * Event handlers are removed after one run.
+	 */
 	public function ajaxClickHandler_before() {
 		$javascript = <<<JS
-window.jQuery(document).on('ajaxStart.ss.test.behaviour', function(){
+window.jQuery(document).one('ajaxStart.ss.test.behaviour', function(){
 	window.__ajaxStatus = function() {
 		return 'waiting';
 	};
 });
-window.jQuery(document).on('ajaxComplete.ss.test.behaviour', function(e, jqXHR){
+window.jQuery(document).one('ajaxComplete.ss.test.behaviour', function(e, jqXHR){
 	if (null === jqXHR.getResponseHeader('X-ControllerURL')) {
 		window.__ajaxStatus = function() {
 			return 'no ajax';
 		};
 	}
 });
-window.jQuery(document).on('ajaxSuccess.ss.test.behaviour', function(e, jqXHR){
+window.jQuery(document).one('ajaxSuccess.ss.test.behaviour', function(e, jqXHR){
 	if (null === jqXHR.getResponseHeader('X-ControllerURL')) {
 		window.__ajaxStatus = function() {
 			return 'success';
@@ -94,16 +99,14 @@ JS;
 		$this->getSession()->executeScript($javascript);
 	}
 
+	/**
+	 * Wait for the __ajaxStatus()to return anything but 'waiting'.
+	 * Don't wait longer than 5 seconds.
+	 */
 	public function ajaxClickHandler_after() {
 		$this->getSession()->wait(5000,
 			"(typeof window.__ajaxStatus !== 'undefined' ? window.__ajaxStatus() : 'no ajax') !== 'waiting'"
 		);
-		$javascript = <<<JS
-window.jQuery(document).off('ajaxStart.ss.test.behaviour');
-window.jQuery(document).off('ajaxComplete.ss.test.behaviour');
-window.jQuery(document).off('ajaxSuccess.ss.test.behaviour');
-JS;
-		$this->getSession()->executeScript($javascript);
 	}
 
 	/**
