@@ -16,7 +16,9 @@ require_once 'PHPUnit/Autoload.php';
 require_once 'PHPUnit/Framework/Assert/Functions.php';
 
 /**
- * Features context.
+ * CmsFormsContext
+ *
+ * Context used to define steps related to forms inside CMS.
  */
 class CmsFormsContext extends BehatContext
 {

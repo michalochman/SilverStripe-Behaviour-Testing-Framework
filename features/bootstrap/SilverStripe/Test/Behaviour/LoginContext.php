@@ -16,7 +16,9 @@ require_once 'PHPUnit/Autoload.php';
 require_once 'PHPUnit/Framework/Assert/Functions.php';
 
 /**
- * Features context.
+ * LoginContext
+ *
+ * Context used to define steps related to login and logout functionality
  */
 class LoginContext extends BehatContext
 {

@@ -16,7 +16,9 @@ require_once 'PHPUnit/Autoload.php';
 require_once 'PHPUnit/Framework/Assert/Functions.php';
 
 /**
- * Features context.
+ * CmsPreviewContext
+ *
+ * Context used to define steps related to preview functionality.
  */
 class CmsPreviewContext extends BehatContext
 {

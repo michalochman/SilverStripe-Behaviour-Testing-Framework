@@ -16,7 +16,9 @@ require_once 'PHPUnit/Autoload.php';
 require_once 'PHPUnit/Framework/Assert/Functions.php';
 
 /**
- * Features context.
+ * CmsUiContext
+ *
+ * Context used to define steps related to SilverStripe CMS UI like Tree or Panel.
  */
 class CmsUiContext extends BehatContext
 {

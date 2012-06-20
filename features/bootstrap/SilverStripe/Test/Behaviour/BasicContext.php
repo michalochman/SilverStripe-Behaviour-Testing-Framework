@@ -16,7 +16,12 @@ require_once 'PHPUnit/Autoload.php';
 require_once 'PHPUnit/Framework/Assert/Functions.php';
 
 /**
- * Features context.
+ * BasicContext
+ *
+ * Context used to define generic steps like following anchors or pressing buttons.
+ * Handles timeouts.
+ * Handles redirections.
+ * Handles AJAX enabled links, buttons and forms - jQuery is assumed.
  */
 class BasicContext extends BehatContext
 {

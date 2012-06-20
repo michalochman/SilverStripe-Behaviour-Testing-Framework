@@ -24,7 +24,10 @@ require_once 'PHPUnit/Autoload.php';
 require_once 'PHPUnit/Framework/Assert/Functions.php';
 
 /**
- * Features context.
+ * Features context
+ *
+ * Context automatically loaded by Behat.
+ * Uses subcontexts to extend functionality.
  */
 class FeatureContext extends SilverStripeContext
 {	

@@ -11,6 +11,11 @@ use Behat\Mink\Driver\Selenium2Driver;
 // Mink etc.
 require_once 'vendor/autoload.php';
 
+/**
+ * SilverStripeContext
+ *
+ * Generic context wrapper used as a base for Behat FeatureContext.
+ */
 class SilverStripeContext extends MinkContext
 {
 	/**
