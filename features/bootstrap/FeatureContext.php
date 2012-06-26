@@ -3,11 +3,12 @@
 use Behat\Behat\Context\ClosuredContextInterface,
     Behat\Behat\Context\TranslatedContextInterface,
     Behat\Behat\Context\BehatContext,
+    Behat\Behat\Context\Step,
     Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
 
-use Behat\Behat\Context\Step;
+use Behat\SilverStripeExtension\Context\SilverStripeAwareContextInterface;
 
 use SilverStripe\Test\Behaviour\SilverStripeContext,
     SilverStripe\Test\Behaviour\BasicContext,
@@ -28,7 +29,7 @@ require_once 'PHPUnit/Framework/Assert/Functions.php';
  * Context automatically loaded by Behat.
  * Uses subcontexts to extend functionality.
  */
-class FeatureContext extends SilverStripeContext
+class FeatureContext extends SilverStripeContext implements SilverStripeAwareContextInterface
 {	
 	protected $context;
 	
@@ -47,6 +48,14 @@ class FeatureContext extends SilverStripeContext
 		$this->useContext('LoginContext', new LoginContext($parameters));
 		$this->useContext('CmsFormsContext', new CmsFormsContext($parameters));
 		$this->useContext('CmsUiContext', new CmsUiContext($parameters));
+	}
+
+	public function setSilverstripe($silverstripe, $arg2)
+	{
+		$debug = <<<DEBUG
+SETTING SILVERSTRIPE: $silverstripe $arg2
+DEBUG;
+		echo $debug . PHP_EOL;
 	}
 
 }
