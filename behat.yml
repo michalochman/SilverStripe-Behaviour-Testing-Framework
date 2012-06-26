@@ -6,6 +6,9 @@ default:
       admin_url: /admin/
       login_url: /Security/login
   extensions:
+    features/extensions/SilverStripeExtension/init.php:
+#    Behat\SilverStripeExtension\Extension:
+      param1: value
     Behat\MinkExtension\Extension:
       base_url:  'http://localhost'
       default_session: goutte
