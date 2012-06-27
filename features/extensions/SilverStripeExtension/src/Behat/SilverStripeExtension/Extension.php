@@ -32,18 +32,13 @@ class Extension extends BaseExtension
      */
     public function load(array $config, ContainerBuilder $container)
     {
-        $var_export = 'var_export';
-        $debug = <<<DEBUG
-Behat\SilverStripeExtension config is:
-{$var_export($config, true)}
-DEBUG;
-        echo $debug . PHP_EOL;
+        if (!isset($config['bootstrap_script'])) {
+            throw new \InvalidArgumentException('Specify `bootstrap_script` parameter for silverstripe_extension');
+        }
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/services'));
         $loader->load('silverstripe.yml');
-//        $configPath = $container->getParameter('behat.paths.config');
-//        var_dump($configPath);
 
-        $container->setParameter('behat.silverstripe_extension.test_argument_second', $config['param1']);
+        $container->setParameter('behat.silverstripe_extension.bootstrap_script', $config['bootstrap_script']);
     }
 }

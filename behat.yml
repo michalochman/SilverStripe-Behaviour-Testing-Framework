@@ -8,9 +8,9 @@ default:
   extensions:
     features/extensions/SilverStripeExtension/init.php:
 #    Behat\SilverStripeExtension\Extension:
-      param1: value
+      bootstrap_script: /Users/michal/Projects/SilverStripe/htdocs/framework/tests/bootstrap.php
     Behat\MinkExtension\Extension:
-      base_url:  'http://localhost'
+      base_url:  http://localhost
       default_session: goutte
       javascript_session: selenium2
       goutte:    ~

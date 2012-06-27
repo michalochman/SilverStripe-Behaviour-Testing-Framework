@@ -1,10 +1,10 @@
 parameters:
   behat.silverstripe_extension.context.initializer.class: Behat\SilverStripeExtension\Context\Initializer\SilverStripeAwareInitializer
-  behat.silverstripe_extension.test_argument: 'testing'
-  behat.silverstripe_extension.test_argument_second: ~
+  behat.silverstripe_extension.bootstrap_script: ~
 services:
   behat.silverstripe_extension.context.initializer:
     class: %behat.silverstripe_extension.context.initializer.class%
-    arguments: [%behat.silverstripe_extension.test_argument%, %behat.silverstripe_extension.test_argument_second%]
+    arguments:
+      - %behat.silverstripe_extension.bootstrap_script%
     tags:
       - { name: behat.context.initializer }

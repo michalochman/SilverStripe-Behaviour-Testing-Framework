@@ -25,15 +25,13 @@ use Behat\SilverStripeExtension\Context\SilverStripeAwareContextInterface;
 class SilverStripeAwareInitializer implements InitializerInterface
 {
     private $silverstripe;
-    private $arg2;
 
     /**
      * Initializes initializer.
      */
-    public function __construct($silverstripe, $arg2)
+    public function __construct($silverstripe)
     {
         $this->silverstripe = $silverstripe;
-        $this->arg2 = $arg2;
     }
 
     /**
@@ -55,6 +53,6 @@ class SilverStripeAwareInitializer implements InitializerInterface
      */
     public function initialize(ContextInterface $context)
     {
-        $context->setSilverstripe($this->silverstripe, $this->arg2);
+        $context->setSilverstripe($this->silverstripe);
     }
 }

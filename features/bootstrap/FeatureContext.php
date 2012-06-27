@@ -1,20 +1,22 @@
 <?php
 
 use Behat\Behat\Context\ClosuredContextInterface,
-Behat\Behat\Context\TranslatedContextInterface,
-Behat\Behat\Context\BehatContext,
-Behat\Behat\Context\Step,
-Behat\Behat\Exception\PendingException;
+    Behat\Behat\Context\TranslatedContextInterface,
+    Behat\Behat\Context\BehatContext,
+    Behat\Behat\Context\Step,
+    Behat\Behat\Event\FeatureEvent,
+    Behat\Behat\Event\ScenarioEvent,
+    Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode,
-Behat\Gherkin\Node\TableNode;
+    Behat\Gherkin\Node\TableNode;
 
 use Behat\SilverStripeExtension\Context\SilverStripeAwareContextInterface;
 
 use SilverStripe\Test\Behaviour\SilverStripeContext,
-SilverStripe\Test\Behaviour\BasicContext,
-SilverStripe\Test\Behaviour\LoginContext,
-SilverStripe\Test\Behaviour\CmsFormsContext,
-SilverStripe\Test\Behaviour\CmsUiContext;
+    SilverStripe\Test\Behaviour\BasicContext,
+    SilverStripe\Test\Behaviour\LoginContext,
+    SilverStripe\Test\Behaviour\CmsFormsContext,
+    SilverStripe\Test\Behaviour\CmsUiContext;
 
 // Contexts
 require_once __DIR__ . '/SilverStripe/Test/Behaviour/SilverStripeContext.php';
@@ -32,6 +34,7 @@ require_once 'PHPUnit/Framework/Assert/Functions.php';
 class FeatureContext extends SilverStripeContext implements SilverStripeAwareContextInterface
 {
     protected $context;
+    protected $silverstripe;
 
     /**
      * Initializes context.
@@ -50,11 +53,31 @@ class FeatureContext extends SilverStripeContext implements SilverStripeAwareCon
         $this->useContext('CmsUiContext', new CmsUiContext($parameters));
     }
 
-    public function setSilverstripe($silverstripe, $arg2)
+    public function setSilverstripe($silverstripe)
     {
-        $debug = <<<DEBUG
-SETTING SILVERSTRIPE: $silverstripe $arg2
-DEBUG;
-        echo $debug . PHP_EOL;
+        $this->silverstripe = $silverstripe;
+    }
+
+    /**
+     * @BeforeScenario
+     */
+    public function before(ScenarioEvent $event)
+    {
+        if (!isset($event->getContext()->silverstripe)) {
+            throw new LogicException('Context\'s $silverstripe has to be set when implementing SilverStripeAwareContextInterface.');
+        }
+
+        require_once($event->getContext()->silverstripe);
+        $dbname = SapphireTest::create_temp_db();
+        DB::set_alternative_database_name($dbname);
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function after(ScenarioEvent $event)
+    {
+        SapphireTest::kill_temp_db();
+        DB::set_alternative_database_name(null);
     }
 }
