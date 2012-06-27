@@ -3,8 +3,8 @@
 namespace Behat\SilverStripeExtension;
 
 use Symfony\Component\Config\FileLocator,
-	  Symfony\Component\DependencyInjection\ContainerBuilder,
-	  Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+    Symfony\Component\DependencyInjection\ContainerBuilder,
+    Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 use Behat\Behat\Extension\Extension as BaseExtension;
 
@@ -24,26 +24,26 @@ use Behat\Behat\Extension\Extension as BaseExtension;
  */
 class Extension extends BaseExtension
 {
-	/**
-	 * Loads a specific configuration.
-	 *
-	 * @param array            $config    Extension configuration hash (from behat.yml)
-	 * @param ContainerBuilder $container ContainerBuilder instance
-	 */
-	public function load(array $config, ContainerBuilder $container)
-	{
-		$var_export = 'var_export';
-		$debug = <<<DEBUG
+    /**
+     * Loads a specific configuration.
+     *
+     * @param array            $config    Extension configuration hash (from behat.yml)
+     * @param ContainerBuilder $container ContainerBuilder instance
+     */
+    public function load(array $config, ContainerBuilder $container)
+    {
+        $var_export = 'var_export';
+        $debug = <<<DEBUG
 Behat\SilverStripeExtension config is:
 {$var_export($config, true)}
 DEBUG;
-		echo $debug . PHP_EOL;
+        echo $debug . PHP_EOL;
 
-		$loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/services'));
-		$loader->load('silverstripe.yml');
-//		$configPath = $container->getParameter('behat.paths.config');
-//		var_dump($configPath);
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/services'));
+        $loader->load('silverstripe.yml');
+//        $configPath = $container->getParameter('behat.paths.config');
+//        var_dump($configPath);
 
-		$container->setParameter('behat.silverstripe_extension.test_argument_second', $config['param1']);
-	}
+        $container->setParameter('behat.silverstripe_extension.test_argument_second', $config['param1']);
+    }
 }

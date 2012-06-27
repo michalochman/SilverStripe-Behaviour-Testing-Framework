@@ -1,20 +1,20 @@
 <?php
 
 use Behat\Behat\Context\ClosuredContextInterface,
-    Behat\Behat\Context\TranslatedContextInterface,
-    Behat\Behat\Context\BehatContext,
-    Behat\Behat\Context\Step,
-    Behat\Behat\Exception\PendingException;
+Behat\Behat\Context\TranslatedContextInterface,
+Behat\Behat\Context\BehatContext,
+Behat\Behat\Context\Step,
+Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode,
-    Behat\Gherkin\Node\TableNode;
+Behat\Gherkin\Node\TableNode;
 
 use Behat\SilverStripeExtension\Context\SilverStripeAwareContextInterface;
 
 use SilverStripe\Test\Behaviour\SilverStripeContext,
-    SilverStripe\Test\Behaviour\BasicContext,
-    SilverStripe\Test\Behaviour\LoginContext,
-    SilverStripe\Test\Behaviour\CmsFormsContext,
-    SilverStripe\Test\Behaviour\CmsUiContext;
+SilverStripe\Test\Behaviour\BasicContext,
+SilverStripe\Test\Behaviour\LoginContext,
+SilverStripe\Test\Behaviour\CmsFormsContext,
+SilverStripe\Test\Behaviour\CmsUiContext;
 
 // Contexts
 require_once __DIR__ . '/SilverStripe/Test/Behaviour/SilverStripeContext.php';
@@ -30,32 +30,31 @@ require_once 'PHPUnit/Framework/Assert/Functions.php';
  * Uses subcontexts to extend functionality.
  */
 class FeatureContext extends SilverStripeContext implements SilverStripeAwareContextInterface
-{	
-	protected $context;
-	
-	/**
-	 * Initializes context.
-	 * Every scenario gets it's own context object.
-	 *
-	 * @param   array   $parameters     context parameters (set them up through behat.yml)
-	 */
-	public function __construct(array $parameters)
-	{	
-		// Initialize your context here
-		$this->context = $parameters;
+{
+    protected $context;
 
-		$this->useContext('BasicContext', new BasicContext($parameters));
-		$this->useContext('LoginContext', new LoginContext($parameters));
-		$this->useContext('CmsFormsContext', new CmsFormsContext($parameters));
-		$this->useContext('CmsUiContext', new CmsUiContext($parameters));
-	}
+    /**
+     * Initializes context.
+     * Every scenario gets it's own context object.
+     *
+     * @param   array   $parameters     context parameters (set them up through behat.yml)
+     */
+    public function __construct(array $parameters)
+    {
+        // Initialize your context here
+        $this->context = $parameters;
 
-	public function setSilverstripe($silverstripe, $arg2)
-	{
-		$debug = <<<DEBUG
+        $this->useContext('BasicContext', new BasicContext($parameters));
+        $this->useContext('LoginContext', new LoginContext($parameters));
+        $this->useContext('CmsFormsContext', new CmsFormsContext($parameters));
+        $this->useContext('CmsUiContext', new CmsUiContext($parameters));
+    }
+
+    public function setSilverstripe($silverstripe, $arg2)
+    {
+        $debug = <<<DEBUG
 SETTING SILVERSTRIPE: $silverstripe $arg2
 DEBUG;
-		echo $debug . PHP_EOL;
-	}
-
+        echo $debug . PHP_EOL;
+    }
 }

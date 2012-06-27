@@ -18,10 +18,10 @@ namespace Behat\SilverStripeExtension\Context;
  */
 interface SilverStripeAwareContextInterface
 {
-	/**
-	 * Sets SilverStripe instance.
-	 *
-	 * @param SilverStripe $silverstripe SilverStripe xxx
-	 */
-	function setSilverstripe($silverstripe, $arg2);
+    /**
+     * Sets SilverStripe instance.
+     *
+     * @param SilverStripe $silverstripe SilverStripe xxx
+     */
+    function setSilverstripe($silverstripe, $arg2);
 }

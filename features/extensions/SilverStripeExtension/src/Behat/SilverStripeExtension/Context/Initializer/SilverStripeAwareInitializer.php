@@ -3,7 +3,7 @@
 namespace Behat\SilverStripeExtension\Context\Initializer;
 
 use Behat\Behat\Context\Initializer\InitializerInterface,
-	  Behat\Behat\Context\ContextInterface;
+    Behat\Behat\Context\ContextInterface;
 
 use Behat\SilverStripeExtension\Context\SilverStripeAwareContextInterface;
 
@@ -24,37 +24,37 @@ use Behat\SilverStripeExtension\Context\SilverStripeAwareContextInterface;
  */
 class SilverStripeAwareInitializer implements InitializerInterface
 {
-	private $silverstripe;
-	private $arg2;
+    private $silverstripe;
+    private $arg2;
 
-	/**
-	 * Initializes initializer.
-	 */
-	public function __construct($silverstripe, $arg2)
-	{
-		$this->silverstripe = $silverstripe;
-		$this->arg2 = $arg2;
-	}
+    /**
+     * Initializes initializer.
+     */
+    public function __construct($silverstripe, $arg2)
+    {
+        $this->silverstripe = $silverstripe;
+        $this->arg2 = $arg2;
+    }
 
-	/**
-	 * Checks if initializer supports provided context.
-	 *
-	 * @param ContextInterface $context
-	 *
-	 * @return Boolean
-	 */
-	public function supports(ContextInterface $context)
-	{
-		return $context instanceof SilverStripeAwareContextInterface;
-	}
+    /**
+     * Checks if initializer supports provided context.
+     *
+     * @param ContextInterface $context
+     *
+     * @return Boolean
+     */
+    public function supports(ContextInterface $context)
+    {
+        return $context instanceof SilverStripeAwareContextInterface;
+    }
 
-	/**
-	 * Initializes provided context.
-	 *
-	 * @param ContextInterface $context
-	 */
-	public function initialize(ContextInterface $context)
-	{
-		$context->setSilverstripe($this->silverstripe, $this->arg2);
-	}
+    /**
+     * Initializes provided context.
+     *
+     * @param ContextInterface $context
+     */
+    public function initialize(ContextInterface $context)
+    {
+        $context->setSilverstripe($this->silverstripe, $this->arg2);
+    }
 }

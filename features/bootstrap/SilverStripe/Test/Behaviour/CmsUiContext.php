@@ -3,13 +3,13 @@
 namespace SilverStripe\Test\Behaviour;
 
 use Behat\Behat\Context\ClosuredContextInterface,
-Behat\Behat\Context\TranslatedContextInterface,
-Behat\Behat\Context\BehatContext,
-Behat\Behat\Exception\PendingException;
+    Behat\Behat\Context\TranslatedContextInterface,
+    Behat\Behat\Context\BehatContext,
+    Behat\Behat\Context\Step,
+    Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode,
-Behat\Gherkin\Node\TableNode;
+    Behat\Gherkin\Node\TableNode;
 
-use Behat\Behat\Context\Step;
 
 // PHPUnit
 require_once 'PHPUnit/Autoload.php';
@@ -22,134 +22,132 @@ require_once 'PHPUnit/Framework/Assert/Functions.php';
  */
 class CmsUiContext extends BehatContext
 {
-	protected $context;
+    protected $context;
 
-	/**
-	 * Initializes context.
-	 * Every scenario gets it's own context object.
-	 *
-	 * @param   array   $parameters     context parameters (set them up through behat.yml)
-	 */
-	public function __construct(array $parameters)
-	{
-		// Initialize your context here
-		$this->context = $parameters;
-	}
+    /**
+     * Initializes context.
+     * Every scenario gets it's own context object.
+     *
+     * @param   array   $parameters     context parameters (set them up through behat.yml)
+     */
+    public function __construct(array $parameters)
+    {
+        // Initialize your context here
+        $this->context = $parameters;
+    }
 
-	/**
-	 * Get Mink session from MinkContext
-	 */
-	public function getSession($name = null)
-	{
-		return $this->getMainContext()->getSession($name);
-	}
+    /**
+     * Get Mink session from MinkContext
+     */
+    public function getSession($name = null)
+    {
+        return $this->getMainContext()->getSession($name);
+    }
 
-	/**
-	 * @Then /^I should see the CMS$/
-	 */
-	public function iShouldSeeTheCms()
-	{
-		$page = $this->getSession()->getPage();
-		$cms_element = $page->find('css', '.cms');
-		assertNotNull($cms_element, 'CMS not found');
-	}
+    /**
+     * @Then /^I should see the CMS$/
+     */
+    public function iShouldSeeTheCms()
+    {
+        $page = $this->getSession()->getPage();
+        $cms_element = $page->find('css', '.cms');
+        assertNotNull($cms_element, 'CMS not found');
+    }
 
-	/**
-	 * @Then /^I should see "([^"]*)" notice$/
-	 */
-	public function iShouldSeeNotice($notice)
-	{
-		$this->getMainContext()->assertElementContains('.notice-wrap', $notice);
-	}
+    /**
+     * @Then /^I should see "([^"]*)" notice$/
+     */
+    public function iShouldSeeNotice($notice)
+    {
+        $this->getMainContext()->assertElementContains('.notice-wrap', $notice);
+    }
 
-	protected function getCmsContentToolbarElement()
-	{
-		$this->getSession()->wait(5000, "window.jQuery('.cms-content-toolbar').size() > 0");
+    protected function getCmsContentToolbarElement()
+    {
+        $this->getSession()->wait(5000, "window.jQuery('.cms-content-toolbar').size() > 0");
 
-		$page = $this->getSession()->getPage();
-		$cms_content_toolbar_element = $page->find('css', '.cms-content-toolbar');
-		assertNotNull($cms_content_toolbar_element, 'CMS content toolbar not found');
+        $page = $this->getSession()->getPage();
+        $cms_content_toolbar_element = $page->find('css', '.cms-content-toolbar');
+        assertNotNull($cms_content_toolbar_element, 'CMS content toolbar not found');
 
-		return $cms_content_toolbar_element;
-	}
+        return $cms_content_toolbar_element;
+    }
 
-	protected function getCmsTreeElement()
-	{
-		$this->getSession()->wait(5000, "window.jQuery('.cms-tree').size() > 0");
+    protected function getCmsTreeElement()
+    {
+        $this->getSession()->wait(5000, "window.jQuery('.cms-tree').size() > 0");
 
-		$page = $this->getSession()->getPage();
-		$cms_tree_element = $page->find('css', '.cms-tree');
-		assertNotNull($cms_tree_element, 'CMS tree not found');
+        $page = $this->getSession()->getPage();
+        $cms_tree_element = $page->find('css', '.cms-tree');
+        assertNotNull($cms_tree_element, 'CMS tree not found');
 
-		return $cms_tree_element;
-	}
+        return $cms_tree_element;
+    }
 
-	/**
-	 * @Given /^I should see "([^"]*)" button in CMS Content Toolbar$/
-	 */
-	public function iShouldSeeButtonInCmsContentToolbar($text)
-	{
-		$cms_content_toolbar_element = $this->getCmsContentToolbarElement();
+    /**
+     * @Given /^I should see "([^"]*)" button in CMS Content Toolbar$/
+     */
+    public function iShouldSeeButtonInCmsContentToolbar($text)
+    {
+        $cms_content_toolbar_element = $this->getCmsContentToolbarElement();
 
-		$element = $cms_content_toolbar_element->find('named', array('link_or_button', "'$text'"));
-		assertNotNull($element, sprintf('%s button not found', $text));
-	}
+        $element = $cms_content_toolbar_element->find('named', array('link_or_button', "'$text'"));
+        assertNotNull($element, sprintf('%s button not found', $text));
+    }
 
-	/**
-	 * @When /^I should see "([^"]*)" in CMS Tree$/
-	 */
-	public function stepIShouldSeeInCmsTree($text)
-	{
-		$cms_tree_element = $this->getCmsTreeElement();
+    /**
+     * @When /^I should see "([^"]*)" in CMS Tree$/
+     */
+    public function stepIShouldSeeInCmsTree($text)
+    {
+        $cms_tree_element = $this->getCmsTreeElement();
 
-		$element = $cms_tree_element->find('named', array('content', "'$text'"));
-		assertNotNull($element, sprintf('%s not found', $text));
-	}
+        $element = $cms_tree_element->find('named', array('content', "'$text'"));
+        assertNotNull($element, sprintf('%s not found', $text));
+    }
 
-	/**
-	 * @When /^I should not see "([^"]*)" in CMS Tree$/
-	 */
-	public function stepIShouldNotSeeInCmsTree($text)
-	{
-		$cms_tree_element = $this->getCmsTreeElement();
+    /**
+     * @When /^I should not see "([^"]*)" in CMS Tree$/
+     */
+    public function stepIShouldNotSeeInCmsTree($text)
+    {
+        $cms_tree_element = $this->getCmsTreeElement();
 
-		$element = $cms_tree_element->find('named', array('content', "'$text'"));
-		assertNull($element, sprintf('%s found', $text));
-	}
+        $element = $cms_tree_element->find('named', array('content', "'$text'"));
+        assertNull($element, sprintf('%s found', $text));
+    }
 
-	/**
-	 * @When /^I expand Filter CMS Panel$/
-	 */
-	public function iExpandFilterCmsPanel()
-	{
-		$page = $this->getSession()->getPage();
+    /**
+     * @When /^I expand Filter CMS Panel$/
+     */
+    public function iExpandFilterCmsPanel()
+    {
+        $page = $this->getSession()->getPage();
 
-		$panel_toggle_element = $page->find('css', '.cms-content > .cms-panel > .cms-panel-toggle > .toggle-expand');
-		assertNotNull($panel_toggle_element, 'Panel toggle not found');
+        $panel_toggle_element = $page->find('css', '.cms-content > .cms-panel > .cms-panel-toggle > .toggle-expand');
+        assertNotNull($panel_toggle_element, 'Panel toggle not found');
 
-		if ($panel_toggle_element->isVisible())
-		{
-			$panel_toggle_element->click();
-		}
-	}
+        if ($panel_toggle_element->isVisible()) {
+            $panel_toggle_element->click();
+        }
+    }
 
-	/**
-	 * @Then /^I can see the preview panel$/
-	 */
-	public function iCanSeeThePreviewPanel()
-	{
-		$this->getMainContext()->assertElementOnPage('.cms-preview');
-	}
+    /**
+     * @Then /^I can see the preview panel$/
+     */
+    public function iCanSeeThePreviewPanel()
+    {
+        $this->getMainContext()->assertElementOnPage('.cms-preview');
+    }
 
-	/**
-	 * @Given /^the preview contains "([^"]*)"$/
-	 */
-	public function thePreviewContains($content)
-	{
-		$driver = $this->getSession()->getDriver();
-		$driver->switchToIFrame('cms-preview-iframe');
+    /**
+     * @Given /^the preview contains "([^"]*)"$/
+     */
+    public function thePreviewContains($content)
+    {
+        $driver = $this->getSession()->getDriver();
+        $driver->switchToIFrame('cms-preview-iframe');
 
-		$this->getMainContext()->assertPageContainsText($content);
-	}
-
+        $this->getMainContext()->assertPageContainsText($content);
+    }
 }

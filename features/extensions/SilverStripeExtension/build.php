@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the SilverStripe-Behaviour-Testing-Framework
+ * This file is part of the Behat/SilverStripeExtension
  *
  * (c) Michał Ochman <ochman.d.michal@gmail.com>
  *
@@ -12,7 +12,7 @@
 $filename = 'silverstripe_extension.phar';
 
 if (file_exists($filename)) {
-	unlink($filename);
+    unlink($filename);
 }
 
 $phar = new \Phar($filename, 0, 'extension.phar');
@@ -20,10 +20,10 @@ $phar->setSignatureAlgorithm(\Phar::SHA1);
 $phar->startBuffering();
 
 foreach (findFiles('src') as $path) {
-	$phar->addFromString($path, file_get_contents(__DIR__.'/'.$path));
+    $phar->addFromString($path, file_get_contents(__DIR__ . '/' . $path));
 }
 
-$phar->addFromString('init.php', file_get_contents(__DIR__.'/init.php'));
+$phar->addFromString('init.php', file_get_contents(__DIR__ . '/init.php'));
 
 $phar->setStub(<<<STUB
 <?php
@@ -46,16 +46,16 @@ STUB
 );
 $phar->stopBuffering();
 
-function findFiles($dir) {
-	$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
-		RecursiveIteratorIterator::CHILD_FIRST);
+function findFiles($dir)
+{
+    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir), RecursiveIteratorIterator::CHILD_FIRST);
 
-	$files = array();
-	foreach ($iterator as $path) {
-		if ($path->isFile()) {
-			$files[] = $path->getPath().DIRECTORY_SEPARATOR.$path->getFilename();
-		}
-	}
+    $files = array();
+    foreach ($iterator as $path) {
+        if ($path->isFile()) {
+            $files[] = $path->getPath() . DIRECTORY_SEPARATOR . $path->getFilename();
+        }
+    }
 
-	return $files;
+    return $files;
 }
