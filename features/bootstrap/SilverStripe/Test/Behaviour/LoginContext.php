@@ -49,11 +49,14 @@ class LoginContext extends BehatContext
      */
     public function stepIAmLoggedIn()
     {
-        $this->getSession()->visit($this->context['base_url'] . $this->context['admin_url']);
+        $admin_url = $this->getMainContext()->joinUrlParts($this->context['base_url'], $this->context['admin_url']);
+        $login_url = $this->getMainContext()->joinUrlParts($this->context['base_url'], $this->context['login_url']);
 
-        if (0 == strpos($this->getSession()->getCurrentUrl(), $this->context['base_url'] . $this->context['login_url'])) {
+        $this->getSession()->visit($admin_url);
+
+        if (0 == strpos($this->getSession()->getCurrentUrl(), $login_url)) {
             $this->stepILogInWith('admin', 'password');
-            assertStringStartsWith($this->context['base_url'] . $this->context['admin_url'], $this->getSession()->getCurrentUrl());
+            assertStringStartsWith($admin_url, $this->getSession()->getCurrentUrl());
         }
     }
 
@@ -70,7 +73,9 @@ class LoginContext extends BehatContext
      */
     public function stepILogInWith($email, $password)
     {
-        $this->getSession()->visit($this->context['base_url'] . $this->context['login_url']);
+        $login_url = $this->getMainContext()->joinUrlParts($this->context['base_url'], $this->context['login_url']);
+
+        $this->getSession()->visit($login_url);
 
         $page = $this->getSession()->getPage();
 

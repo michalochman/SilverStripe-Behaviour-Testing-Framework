@@ -109,7 +109,7 @@ JS;
     }
 
     /**
-     * @Then /^I should be redirected to ([^ ]+)/
+     * @Then /^I should be redirected to "([^"]+)"/
      */
     public function stepIShouldBeRedirectedTo($url)
     {
@@ -118,7 +118,7 @@ JS;
             $client->followRedirects(true);
             $client->followRedirect();
 
-            $url = $this->context['base_url'] . trim($url, '"');
+            $url = $this->getMainContext()->joinUrlParts($this->context['base_url'], $url);
 
             assertTrue($this->getMainContext()->isCurrentUrlSimilarTo($url), sprintf('Current URL is not %s', $url));
         }
