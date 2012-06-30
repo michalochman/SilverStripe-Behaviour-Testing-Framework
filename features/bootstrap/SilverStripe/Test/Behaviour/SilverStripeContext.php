@@ -68,6 +68,30 @@ class SilverStripeContext extends MinkContext
         return true;
     }
 
+    /**
+     * Joins URL parts into an URL using forward slash.
+     * Forward slash usages are normalised to one between parts.
+     * This method takes variable number of parameters.
+     *
+     * @param $...
+     * @return string
+     * @throws \InvalidArgumentException
+     */
+    public function joinUrlParts()
+    {
+        if (0 === func_num_args()) {
+            throw new \InvalidArgumentException('Need at least one argument');
+        }
+
+        $parts = func_get_args();
+        $trim_slashes = function(&$part) {
+            $part = trim($part, '/');
+        };
+        array_walk($parts, $trim_slashes);
+
+        return implode('/', $parts);
+    }
+
     public function canIntercept()
     {
         $driver = $this->getSession()->getDriver();
