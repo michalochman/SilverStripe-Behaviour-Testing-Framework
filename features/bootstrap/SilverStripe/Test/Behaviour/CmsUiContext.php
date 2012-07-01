@@ -62,6 +62,25 @@ class CmsUiContext extends BehatContext
         $this->getMainContext()->assertElementContains('.notice-wrap', $notice);
     }
 
+    /**
+     * @Then /^I should see "([^"]*)" message$/
+     */
+    public function iShouldSeeMessage($message)
+    {
+        $this->getMainContext()->assertElementContains('.message', $message);
+    }
+
+    protected function getCmsTabsElement()
+    {
+        $this->getSession()->wait(5000, "window.jQuery('.cms-content-header-tabs').size() > 0");
+
+        $page = $this->getSession()->getPage();
+        $cms_content_header_tabs = $page->find('css', '.cms-content-header-tabs');
+        assertNotNull($cms_content_header_tabs, 'CMS tabs not found');
+
+        return $cms_content_header_tabs;
+    }
+
     protected function getCmsContentToolbarElement()
     {
         $this->getSession()->wait(5000, "window.jQuery('.cms-content-toolbar').size() > 0");
@@ -130,6 +149,19 @@ class CmsUiContext extends BehatContext
         if ($panel_toggle_element->isVisible()) {
             $panel_toggle_element->click();
         }
+    }
+
+    /**
+     * @When /^I click the "([^"]*)" CMS tab$/
+     */
+    public function iClickTheCmsTab($tab)
+    {
+        $cms_tabs_element = $this->getCmsTabsElement();
+
+        $tab_element = $cms_tabs_element->find('named', array('link_or_button', "'$tab'"));
+        assertNotNull($tab_element, sprintf('%s tab not found', $tab));
+
+        $tab_element->click();
     }
 
     /**
