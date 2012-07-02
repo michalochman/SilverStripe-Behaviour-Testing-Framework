@@ -3,13 +3,12 @@
 namespace SilverStripe\Test\Behaviour;
 
 use Behat\Behat\Context\ClosuredContextInterface,
-    Behat\Behat\Context\TranslatedContextInterface,
-    Behat\Behat\Context\BehatContext,
-    Behat\Behat\Context\Step,
-    Behat\Behat\Exception\PendingException;
+Behat\Behat\Context\TranslatedContextInterface,
+Behat\Behat\Context\BehatContext,
+Behat\Behat\Context\Step,
+Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode,
-    Behat\Gherkin\Node\TableNode;
-
+Behat\Gherkin\Node\TableNode;
 
 // PHPUnit
 require_once 'PHPUnit/Autoload.php';
@@ -25,10 +24,15 @@ class LoginContext extends BehatContext
     protected $context;
 
     /**
+     * Cache for logInWithPermission()
+     */
+    protected $cache_generatedMembers = array();
+
+    /**
      * Initializes context.
      * Every scenario gets it's own context object.
      *
-     * @param   array   $parameters     context parameters (set them up through behat.yml)
+     * @param array $parameters context parameters (set them up through behat.yml)
      */
     public function __construct(array $parameters)
     {
@@ -58,6 +62,40 @@ class LoginContext extends BehatContext
             $this->stepILogInWith('admin', 'password');
             assertStringStartsWith($admin_url, $this->getSession()->getCurrentUrl());
         }
+    }
+
+    /**
+     * @Given /^I am logged in with "([^"]*)" permissions$/
+     */
+    function iAmLoggedInWithPermissions($permCode)
+    {
+        if (!isset($this->cache_generatedMembers[$permCode])) {
+            $group = \Injector::inst()->create('Group');
+            $group->Title = "$permCode group";
+            $group->write();
+
+            $permission = \Injector::inst()->create('Permission');
+            $permission->Code = $permCode;
+            $permission->write();
+            $group->Permissions()->add($permission);
+
+            $member = \DataObject::get_one('Member', sprintf('"Email" = \'%s\'', "$permCode@example.org"));
+            if (!$member) {
+                $member = \Injector::inst()->create('Member');
+            }
+
+            $member->FirstName = $permCode;
+            $member->Surname = "User";
+            $member->Email = "$permCode@example.org";
+            $member->changePassword('secret');
+            $member->write();
+            $group->Members()->add($member);
+
+            $this->cache_generatedMembers[$permCode] = $member;
+        }
+
+//        $this->cache_generatedMembers[$permCode]->logIn();
+        return new Step\Given(sprintf('I log in with "%s" and "%s"', "$permCode@example.org", 'secret'));
     }
 
     /**

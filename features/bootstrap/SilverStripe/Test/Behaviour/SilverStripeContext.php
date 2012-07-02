@@ -2,11 +2,17 @@
 
 namespace SilverStripe\Test\Behaviour;
 
-use Behat\Behat\Context\Step;
+use Behat\Behat\Context\Step,
+    Behat\Behat\Event\FeatureEvent,
+    Behat\Behat\Event\ScenarioEvent,
+    Behat\Behat\Event\SuiteEvent;
+use Behat\Gherkin\Node\PyStringNode;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Mink\Driver\GoutteDriver,
     Behat\Mink\Driver\Selenium2Driver,
     Behat\Mink\Exception\UnsupportedDriverActionException;
+
+use Behat\SilverStripeExtension\Context\SilverStripeAwareContextInterface;
 
 // Mink etc.
 require_once 'vendor/autoload.php';
@@ -16,8 +22,142 @@ require_once 'vendor/autoload.php';
  *
  * Generic context wrapper used as a base for Behat FeatureContext.
  */
-class SilverStripeContext extends MinkContext
+class SilverStripeContext extends MinkContext implements SilverStripeAwareContextInterface
 {
+    protected $context;
+    protected $silverstripe;
+    protected $fixtures;
+    protected $dbset;
+
+    /**
+     * Initializes context.
+     * Every scenario gets it's own context object.
+     *
+     * @param   array   $parameters     context parameters (set them up through behat.yml)
+     */
+    public function __construct(array $parameters)
+    {
+        // Initialize your context here
+        $this->context = $parameters;
+
+        $this->dbset = false;
+    }
+
+    public function getSession($name = null)
+    {
+        if (!$this->dbset) {
+            $this->setDb();
+        }
+        return $this->getMink()->getSession($name);
+    }
+
+    public function setDb()
+    {
+        $this->dbset = true;
+
+        $setdb_url = $this->joinUrlParts($this->context['base_url'], '/dev/tests/setdb');
+        $setdb_url = sprintf('%s?database=%s', $setdb_url, \DB::get_alternative_database_name());
+        $this->getSession()->visit($setdb_url);
+    }
+
+    public function setSilverstripe($silverstripe)
+    {
+        $this->silverstripe = $silverstripe;
+    }
+
+    public function getFixture($data_object)
+    {
+        if (!array_key_exists($data_object, $this->fixtures)) {
+            throw new \OutOfBoundsException(sprintf('Data object `%s` does not exist!', $data_object));
+        }
+
+        return $this->fixtures[$data_object];
+    }
+
+    public function getFixtures()
+    {
+        return $this->fixtures;
+    }
+
+    /**
+     * @BeforeSuite
+     */
+    public static function setup(SuiteEvent $event)
+    {
+
+    }
+
+    /**
+     * @AfterSuite
+     */
+    public static function teardown(SuiteEvent $event)
+    {
+        \SapphireTest::kill_temp_db();
+        \DB::set_alternative_database_name(null);
+    }
+
+    /**
+     * @BeforeScenario
+     */
+    public function before(ScenarioEvent $event)
+    {
+        if (!isset($this->silverstripe)) {
+            throw new \LogicException('Context\'s $silverstripe has to be set when implementing SilverStripeAwareContextInterface.');
+        }
+
+        if (true !== require_once($this->silverstripe)) {
+            $dbname = \SapphireTest::create_temp_db();
+            \DB::set_alternative_database_name($dbname);
+        }
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function after(ScenarioEvent $event)
+    {
+        $setdb_url = $this->joinUrlParts($this->context['base_url'], '/dev/tests/setdb');
+        $setdb_url = sprintf('%s?database=%s&reload=true', $setdb_url, \DB::get_alternative_database_name());
+        $this->getSession()->visit($setdb_url);
+    }
+
+    /**
+     * @Given /^there are the following ([^\s]*) records$/
+     */
+    public function thereAreTheFollowingPermissionRecords($data_object, PyStringNode $string)
+    {
+        if (!is_array($this->fixtures)) {
+            $this->fixtures = array();
+        }
+
+        if (array_key_exists($data_object, $this->fixtures)) {
+            throw new \InvalidArgumentException(sprintf('Data object `%s` already exists!', $data_object));
+        }
+
+        $fixture = array_merge(array($data_object . ':'), $string->getLines());
+        $fixture = implode("\n  ", $fixture);
+
+        // As we're dealing with split fixtures and can't join them, replace references by hand
+        $fixture = preg_replace_callback('/=>(\w+)\.(\w+)/', array($this, 'replaceFixtureReferences'), $fixture);
+
+        $this->fixtures[$data_object] = new \YamlFixture($fixture);
+        $model = \DataModel::inst();
+        $this->fixtures[$data_object]->saveIntoDatabase($model);
+    }
+
+    public function replaceFixtureReferences($references)
+    {
+        if (!array_key_exists($references[1], $this->fixtures)) {
+            throw new \OutOfBoundsException(sprintf('Data object `%s` does not exist!', $references[1]));
+        }
+        return $this->idFromFixture($references[1], $references[2]);
+    }
+
+    protected function idFromFixture($class_name, $identifier)
+    {
+        return $this->fixtures[$class_name]->idFromFixture($class_name, $identifier);
+    }
+
     /**
      * Parses given URL and returns its components
      *
