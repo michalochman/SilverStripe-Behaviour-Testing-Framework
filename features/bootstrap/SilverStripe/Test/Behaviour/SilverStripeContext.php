@@ -24,10 +24,10 @@ require_once 'vendor/autoload.php';
  */
 class SilverStripeContext extends MinkContext implements SilverStripeAwareContextInterface
 {
+    private $session_key;
+
     protected $context;
-    protected $silverstripe;
     protected $fixtures;
-    protected $dbset;
 
     /**
      * Initializes context.
@@ -39,30 +39,11 @@ class SilverStripeContext extends MinkContext implements SilverStripeAwareContex
     {
         // Initialize your context here
         $this->context = $parameters;
-
-        $this->dbset = false;
     }
 
-    public function getSession($name = null)
+    public function setSessionKey($session_key)
     {
-        if (!$this->dbset) {
-            $this->setDb();
-        }
-        return $this->getMink()->getSession($name);
-    }
-
-    public function setDb()
-    {
-        $this->dbset = true;
-
-        $setdb_url = $this->joinUrlParts($this->context['base_url'], '/dev/tests/setdb');
-        $setdb_url = sprintf('%s?database=%s', $setdb_url, \DB::get_alternative_database_name());
-        $this->getSession()->visit($setdb_url);
-    }
-
-    public function setSilverstripe($silverstripe)
-    {
-        $this->silverstripe = $silverstripe;
+        $this->session_key = $session_key;
     }
 
     public function getFixture($data_object)
@@ -80,35 +61,19 @@ class SilverStripeContext extends MinkContext implements SilverStripeAwareContex
     }
 
     /**
-     * @BeforeSuite
-     */
-    public static function setup(SuiteEvent $event)
-    {
-
-    }
-
-    /**
-     * @AfterSuite
-     */
-    public static function teardown(SuiteEvent $event)
-    {
-        \SapphireTest::kill_temp_db();
-        \DB::set_alternative_database_name(null);
-    }
-
-    /**
      * @BeforeScenario
      */
     public function before(ScenarioEvent $event)
     {
-        if (!isset($this->silverstripe)) {
-            throw new \LogicException('Context\'s $silverstripe has to be set when implementing SilverStripeAwareContextInterface.');
+        if (!isset($this->session_key)) {
+            throw new \LogicException('Context\'s $session_key has to be set when implementing SilverStripeAwareContextInterface.');
         }
 
-        if (true !== require_once($this->silverstripe)) {
-            $dbname = \SapphireTest::create_temp_db();
-            \DB::set_alternative_database_name($dbname);
-        }
+        $selectsession_url = $this->joinUrlParts($this->context['base_url'], '/dev/tests/selectsession');
+        $this->getSession()->visit($selectsession_url);
+        $page = $this->getSession()->getPage();
+        $page->find('css', '#testSessionKey')->setValue($this->session_key);
+        $page->find('css', '#select-session')->click();
     }
 
     /**
@@ -116,9 +81,7 @@ class SilverStripeContext extends MinkContext implements SilverStripeAwareContex
      */
     public function after(ScenarioEvent $event)
     {
-        $setdb_url = $this->joinUrlParts($this->context['base_url'], '/dev/tests/setdb');
-        $setdb_url = sprintf('%s?database=%s&reload=true', $setdb_url, \DB::get_alternative_database_name());
-        $this->getSession()->visit($setdb_url);
+//        \SapphireTest::empty_temp_db();
     }
 
     /**
