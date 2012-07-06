@@ -23,5 +23,5 @@ interface SilverStripeAwareContextInterface
      *
      * @param SilverStripe $silverstripe SilverStripe xxx
      */
-    function setSilverstripe($silverstripe);
+    public function setSessionKey($session_key);
 }

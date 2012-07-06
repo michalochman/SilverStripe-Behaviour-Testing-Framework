@@ -1,10 +1,12 @@
 parameters:
   behat.silverstripe_extension.context.initializer.class: Behat\SilverStripeExtension\Context\Initializer\SilverStripeAwareInitializer
-  behat.silverstripe_extension.bootstrap_script: ~
+  behat.silverstripe_extension.framework_path: ~
+  behat.silverstripe_extension.framework_host: http://localhost
 services:
   behat.silverstripe_extension.context.initializer:
     class: %behat.silverstripe_extension.context.initializer.class%
     arguments:
-      - %behat.silverstripe_extension.bootstrap_script%
+      - %behat.silverstripe_extension.framework_path%
+      - %behat.silverstripe_extension.framework_host%
     tags:
       - { name: behat.context.initializer }

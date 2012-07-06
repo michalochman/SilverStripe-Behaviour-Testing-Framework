@@ -32,13 +32,29 @@ class Extension extends BaseExtension
      */
     public function load(array $config, ContainerBuilder $container)
     {
-        if (!isset($config['bootstrap_script'])) {
-            throw new \InvalidArgumentException('Specify `bootstrap_script` parameter for silverstripe_extension');
+        if (!isset($config['framework_path'])) {
+            throw new \InvalidArgumentException('Specify `framework_path` parameter for silverstripe_extension');
         }
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/services'));
         $loader->load('silverstripe.yml');
 
-        $container->setParameter('behat.silverstripe_extension.bootstrap_script', $config['bootstrap_script']);
+        if (!isset($config['framework_host'])) {
+            $config['framework_host'] = $container->getParameter('behat.silverstripe_extension.framework_host');
+            file_put_contents('php://stderr', 'No `framework_host` parameter for silverstripe_extension provided. Assuming ' . $config['framework_host'] . PHP_EOL);
+        }
+
+        $behat_base_path = $container->getParameter('behat.paths.base');
+        $config['framework_path'] = realpath(sprintf('%s%s%s',
+            rtrim($behat_base_path, DIRECTORY_SEPARATOR),
+            DIRECTORY_SEPARATOR,
+            ltrim($config['framework_path'], DIRECTORY_SEPARATOR)
+        ));
+        if (!file_exists($config['framework_path']) || !is_dir($config['framework_path'])) {
+            throw new \InvalidArgumentException('Path specified as `framework_path` either doesn\'t exist or is not a directory');
+        }
+
+        $container->setParameter('behat.silverstripe_extension.framework_path', $config['framework_path']);
+        $container->setParameter('behat.silverstripe_extension.framework_host', $config['framework_host']);
     }
 }
