@@ -4,19 +4,15 @@ Feature: Edit a page
   So that I correct errors and provide new information
 
   Background:
-    Given I am logged in
+    Given I am logged in with "ADMIN" permissions
     And I go to "/admin/pages"
     Then I should see "About Us" in CMS Tree
 
-  # TODO:
-  # - Move delays inside step definitions
   @javascript
   Scenario: I can open a page for editing from the pages tree
     When I follow "About Us"
     Then I should see an edit page form
 
-  # TODO:
-  # - Move delays inside step definitions
   @javascript
   Scenario: I can edit title and content and see the changes on draft
     When I follow "About Us"

@@ -5,7 +5,7 @@ Feature: Preview a page
 
   @javascript
   Scenario: I can show a preview of the current page from the pages section
-    Given I am logged in
+    Given I am logged in with "ADMIN" permissions
     And I go to "/admin/pages"
     Then I should see "About Us" in CMS Tree
 

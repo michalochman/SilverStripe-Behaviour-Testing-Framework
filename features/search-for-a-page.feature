@@ -3,11 +3,9 @@ Feature: Search for a page
   I want to search for a page in the CMS
   So that I can efficiently navigate nested content structures
 
-  # TODO:
-  # - Move delays inside step definitions
   @javascript
   Scenario: I can search for a page by its title
-    Given I am logged in
+    Given I am logged in with "ADMIN" permissions
     And I go to "/admin/pages"
     Then I should see "About Us" in CMS Tree
     And I should see "Contact Us" in CMS Tree
