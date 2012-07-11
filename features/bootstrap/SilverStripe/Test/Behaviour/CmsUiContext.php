@@ -181,6 +181,7 @@ class CmsUiContext extends BehatContext
         $driver->switchToIFrame('cms-preview-iframe');
 
         $this->getMainContext()->assertPageContainsText($content);
+        $driver->switchToWindow();
     }
 
     /**
@@ -192,5 +193,6 @@ class CmsUiContext extends BehatContext
         $driver->switchToIFrame('cms-preview-iframe');
 
         $this->getMainContext()->assertPageNotContainsText($content);
+        $driver->switchToWindow();
     }
 }
