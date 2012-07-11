@@ -83,7 +83,7 @@ class CmsUiContext extends BehatContext
 
     protected function getCmsContentToolbarElement()
     {
-        $this->getSession()->wait(5000, "window.jQuery('.cms-content-toolbar').size() > 0");
+        $this->getSession()->wait(5000, "window.jQuery('.cms-content-toolbar').size() > 0 && window.jQuery('.cms-content-toolbar').children().size() > 0");
 
         $page = $this->getSession()->getPage();
         $cms_content_toolbar_element = $page->find('css', '.cms-content-toolbar');
