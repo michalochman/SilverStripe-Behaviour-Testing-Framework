@@ -75,15 +75,24 @@ class BasicContext extends BehatContext
     {
         $javascript = <<<JS
 if ('undefined' !== typeof window.jQuery) {
-    window.jQuery(document).one('ajaxStart.ss.test.behaviour', function(){
+    window.jQuery(document).on('ajaxStart.ss.test.behaviour', function(){
         window.__ajaxStatus = function() {
             return 'waiting';
         };
     });
-    window.jQuery(document).one('ajaxStop.ss.test.behaviour', function(e, jqXHR){
-        window.__ajaxStatus = function() {
-            return 'success';
-        };
+    window.jQuery(document).on('ajaxComplete.ss.test.behaviour', function(e, jqXHR){
+        if (null === jqXHR.getResponseHeader('X-ControllerURL')) {
+            window.__ajaxStatus = function() {
+                return 'no ajax';
+            };
+        }
+    });
+    window.jQuery(document).on('ajaxSuccess.ss.test.behaviour', function(e, jqXHR){
+        if (null === jqXHR.getResponseHeader('X-ControllerURL')) {
+            window.__ajaxStatus = function() {
+                return 'success';
+            };
+        }
     });
 }
 JS;
@@ -99,6 +108,14 @@ JS;
         $this->getSession()->wait(5000,
             "(typeof window.__ajaxStatus !== 'undefined' ? window.__ajaxStatus() : 'no ajax') !== 'waiting'"
         );
+        $javascript = <<<JS
+if ('undefined' !== typeof window.jQuery) {
+    window.jQuery(document).off('ajaxStart.ss.test.behaviour');
+    window.jQuery(document).off('ajaxComplete.ss.test.behaviour');
+    window.jQuery(document).off('ajaxSuccess.ss.test.behaviour');
+}
+JS;
+        $this->getSession()->executeScript($javascript);
     }
 
     /**
