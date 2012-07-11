@@ -39,18 +39,16 @@ Feature: Manage users
   @javascript
   Scenario: I can list all users regardless of group
     When I click the "Users" CMS tab
-    # Note: This GridField is not labelled in the UI
     Then I should see "admin@test.com" in the "#Root_Users" element
     And I should see "staffmember@test.com" in the "#Root_Users" element
 
   @javascript
   Scenario: I can list all users in a specific group
     When I click the "Groups" CMS tab
-    # Should do a full node content match in this area
     # TODO Please check how performant this is
-    And I click "Admin Group" in the "#Root_Users" element
-    Then I should see "admin@test.com" in the "#Root_Users" element
-    And I should not see "staffmember@test.com" in the "#Root_Users" element
+    And I click "Admin Group" in the "#Root_Groups" element
+    Then I should see "admin@test.com" in the "#Root_Members" element
+    And I should not see "staffmember@test.com" in the "#Root_Members" element
 
   @javascript
   Scenario: I can add a user to the system
@@ -70,15 +68,14 @@ Feature: Manage users
   Scenario: I can edit an existing user and add him to an existing group
     When I click the "Users" CMS tab
     And I click "staffmember@test.com" in the "#Root_Users" element
-    # Chosen.js dropdown field. Ideally we can bypass this and
-    # work transparently with hidden form fields
     And I select "Admin Group" from "Groups"
     And I additionally select "Administrators" from "Groups"
     And I press "Save" button
+    Then I should see "Saved Member" message
 
     When I go to "admin/security"
     And I click the "Groups" CMS tab
-    And I click "Admin Group" in the "#Root_Users" element
+    And I click "Admin Group" in the "#Root_Groups" element
     Then I should see "staffmember@test.com"
 
   @javascript
