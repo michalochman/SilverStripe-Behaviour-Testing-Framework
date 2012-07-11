@@ -28,6 +28,7 @@ Feature: Manage users
         Email: admin@test.com
         Groups: =>Group.admingroup
       staffmember:
+        FirstName: Staff
         Email: staffmember@test.com
         Groups: =>Group.staffgroup
       """
