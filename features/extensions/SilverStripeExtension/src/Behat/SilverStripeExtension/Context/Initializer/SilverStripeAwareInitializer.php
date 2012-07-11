@@ -3,7 +3,7 @@
 namespace Behat\SilverStripeExtension\Context\Initializer;
 
 use Behat\Behat\Context\Initializer\InitializerInterface,
-    Behat\Behat\Context\ContextInterface;
+Behat\Behat\Context\ContextInterface;
 
 use Behat\SilverStripeExtension\Context\SilverStripeAwareContextInterface;
 
@@ -33,15 +33,16 @@ class SilverStripeAwareInitializer implements InitializerInterface
     public function __construct($framework_path, $framework_host)
     {
         $this->bootstrap($framework_path, $framework_host);
-        $database_config = $this->initialize_temp_db();
+        $database_config = $this->initializeTempDb();
 
-        $this->session_key = $this->generate_session_key($database_config);
-        $this->session_file = $this->persist_session($database_config, $this->session_key);
+        $this->session_key = $this->generateSessionKey($database_config);
+        $this->session_file = $this->persistSession($database_config, $this->session_key);
     }
 
     public function __destruct()
     {
-        $this->delete_temp_db();
+        $this->deleteTempDb();
+        $this->forgetSession();
     }
 
     /**
@@ -68,7 +69,7 @@ class SilverStripeAwareInitializer implements InitializerInterface
 
     protected function bootstrap($framework_path, $framework_host)
     {
-        file_put_contents('php://stderr', 'Bootstrapping'.PHP_EOL);
+        file_put_contents('php://stderr', 'Bootstrapping' . PHP_EOL);
 
         // Set file to URL mappings
         global $_FILE_TO_URL_MAPPING;
@@ -81,9 +82,9 @@ class SilverStripeAwareInitializer implements InitializerInterface
         restore_error_handler();
     }
 
-    protected function initialize_temp_db()
+    protected function initializeTempDb()
     {
-        file_put_contents('php://stderr', 'Creating temp DB'.PHP_EOL);
+        file_put_contents('php://stderr', 'Creating temp DB' . PHP_EOL);
         $dbname = \SapphireTest::create_temp_db();
         \DB::set_alternative_database_name($dbname);
         $database_config = array(
@@ -92,38 +93,38 @@ class SilverStripeAwareInitializer implements InitializerInterface
             ),
         );
 
-        $this->populate_temp_db();
+        $this->populateTempDb();
 
         return json_encode($database_config);
     }
 
-    protected function populate_temp_db()
+    protected function populateTempDb()
     {
-        file_put_contents('php://stderr', 'Populating temp DB with defaults.'.PHP_EOL);
+        file_put_contents('php://stderr', 'Populating temp DB with defaults.' . PHP_EOL);
         global $databaseConfig;
         \DB::connect($databaseConfig);
         $dataClasses = \ClassInfo::subclassesFor('DataObject');
         array_shift($dataClasses);
-        foreach($dataClasses as $dataClass) {
+        foreach ($dataClasses as $dataClass) {
             \singleton($dataClass)->requireDefaultRecords();
         }
     }
 
-    protected function delete_temp_db()
+    protected function deleteTempDb()
     {
-        file_put_contents('php://stderr', 'Killing temp DB'.PHP_EOL);
+        file_put_contents('php://stderr', 'Killing temp DB' . PHP_EOL);
         \SapphireTest::kill_temp_db();
         \DB::set_alternative_database_name(null);
     }
 
-    protected function generate_session_key($database_config)
+    protected function generateSessionKey($database_config)
     {
         return sha1(sprintf('%s%s', $database_config, microtime(true)));
     }
 
-    protected function persist_session($database_config, $session_key)
+    protected function persistSession($database_config, $session_key)
     {
-        file_put_contents('php://stderr', 'Saving testSessionKey file'.PHP_EOL);
+        file_put_contents('php://stderr', 'Saving testSessionKey file' . PHP_EOL);
         $temp_dir = '/tmp';
         $test_sessions_dir = $temp_dir . DIRECTORY_SEPARATOR . 'testsessions';
         if (!file_exists($test_sessions_dir)) {
@@ -135,9 +136,9 @@ class SilverStripeAwareInitializer implements InitializerInterface
         return $test_session_file;
     }
 
-    protected function forget_session()
+    protected function forgetSession()
     {
-        file_put_contents('php://stderr', 'Removing testSessionKey file'.PHP_EOL);
+        file_put_contents('php://stderr', 'Removing testSessionKey file' . PHP_EOL);
         if (file_exists($this->session_file)) {
             unlink($this->session_file);
         }
