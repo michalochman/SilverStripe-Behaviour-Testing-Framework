@@ -93,21 +93,7 @@ class SilverStripeAwareInitializer implements InitializerInterface
             ),
         );
 
-        $this->populateTempDb();
-
         return json_encode($database_config);
-    }
-
-    protected function populateTempDb()
-    {
-        file_put_contents('php://stderr', 'Populating temp DB with defaults.' . PHP_EOL);
-        global $databaseConfig;
-        \DB::connect($databaseConfig);
-        $dataClasses = \ClassInfo::subclassesFor('DataObject');
-        array_shift($dataClasses);
-        foreach ($dataClasses as $dataClass) {
-            \singleton($dataClass)->requireDefaultRecords();
-        }
     }
 
     protected function deleteTempDb()
