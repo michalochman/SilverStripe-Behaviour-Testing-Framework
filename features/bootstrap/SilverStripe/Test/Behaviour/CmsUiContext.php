@@ -182,4 +182,15 @@ class CmsUiContext extends BehatContext
 
         $this->getMainContext()->assertPageContainsText($content);
     }
+
+    /**
+     * @Given /^the preview does not contain "([^"]*)"$/
+     */
+    public function thePreviewDoesNotContain($content)
+    {
+        $driver = $this->getSession()->getDriver();
+        $driver->switchToIFrame('cms-preview-iframe');
+
+        $this->getMainContext()->assertPageNotContainsText($content);
+    }
 }
