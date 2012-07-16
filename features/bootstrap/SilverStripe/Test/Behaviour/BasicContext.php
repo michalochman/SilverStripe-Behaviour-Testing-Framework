@@ -178,4 +178,28 @@ if ('undefined' !== typeof window.jQuery) {
 JS;
         $this->getSession()->executeScript($javascript);
     }
+
+    /**
+     * @Given /^I type "([^"]*)" into the dialog$/
+     */
+    public function iTypeIntoTheDialog($data)
+    {
+        $this->getSession()->getDriver()->wdSession->postAlert_Text($data);
+    }
+
+    /**
+     * @Given /^I confirm the dialog$/
+     */
+    public function iConfirmTheDialog()
+    {
+        $this->getSession()->getDriver()->wdSession->accept_alert();
+    }
+
+    /**
+     * @Given /^I dismiss the dialog$/
+     */
+    public function iDismissTheDialog()
+    {
+        $this->getSession()->getDriver()->wdSession->dismiss_alert();
+    }
 }
