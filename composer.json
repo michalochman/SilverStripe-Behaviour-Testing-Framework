@@ -4,7 +4,8 @@
         "behat/mink":  "1.4@stable",
         "behat/mink-goutte-driver": "*",
         "behat/mink-selenium2-driver": "*",
-        "behat/mink-extension": "*"
+        "behat/mink-extension": "*",
+        "symfony/yaml": "*"
     },
     "config": {
         "bin-dir": "bin"
