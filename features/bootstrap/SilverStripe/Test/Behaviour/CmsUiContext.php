@@ -103,6 +103,24 @@ class CmsUiContext extends BehatContext
         return $cms_tree_element;
     }
 
+    protected function getGridfieldTable($title)
+    {
+        $page = $this->getSession()->getPage();
+        $table_elements = $page->findAll('css', '.ss-gridfield-table');
+        assertNotNull($table_elements, 'Table elements not found');
+
+        $table_element = null;
+        foreach ($table_elements as $table) {
+            $table_title_element = $table->find('css', '.title');
+            if ($table_title_element->getText() === $title) {
+                $table_element = $table;
+            }
+        }
+        assertNotNull($table_element, sprintf('Table `%s` not found', $title));
+
+        return $table_element;
+    }
+
     /**
      * @Given /^I should see "([^"]*)" button in CMS Content Toolbar$/
      */
@@ -162,6 +180,40 @@ class CmsUiContext extends BehatContext
         assertNotNull($tab_element, sprintf('%s tab not found', $tab));
 
         $tab_element->click();
+    }
+
+    /**
+     * @Then /^the "([^"]*)" table should contain "([^"]*)"$/
+     */
+    public function theTableShouldContain($table, $text)
+    {
+        $table_element = $this->getGridfieldTable($table);
+
+        $element = $table_element->find('named', array('content', "'$text'"));
+        assertNotNull($element, sprintf('Element containing `%s` not found in `%s` table', $text, $table));
+    }
+
+    /**
+     * @Then /^the "([^"]*)" table should not contain "([^"]*)"$/
+     */
+    public function theTableShouldNotContain($table, $text)
+    {
+        $table_element = $this->getGridfieldTable($table);
+
+        $element = $table_element->find('named', array('content', "'$text'"));
+        assertNull($element, sprintf('Element containing `%s` not found in `%s` table', $text, $table));
+    }
+
+    /**
+     * @Given /^I click on "([^"]*)" in the "([^"]*)" table$/
+     */
+    public function iClickOnInTheTable($text, $table)
+    {
+        $table_element = $this->getGridfieldTable($table);
+
+        $element = $table_element->find('named', array('content', "'$text'"));
+        assertNotNull($element, sprintf('Element containing `%s` not found', $text));
+        $element->click();
     }
 
     /**
