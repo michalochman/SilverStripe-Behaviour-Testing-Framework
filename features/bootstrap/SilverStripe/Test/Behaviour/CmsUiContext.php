@@ -114,6 +114,7 @@ class CmsUiContext extends BehatContext
             $table_title_element = $table->find('css', '.title');
             if ($table_title_element->getText() === $title) {
                 $table_element = $table;
+                break;
             }
         }
         assertNotNull($table_element, sprintf('Table `%s` not found', $title));
