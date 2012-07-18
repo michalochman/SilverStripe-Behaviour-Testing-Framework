@@ -94,7 +94,7 @@ Feature: Manage files
     And I click on "file1.jpg" in the "folder1" table
     # Should be implemented as a generic preprocessor available to all steps
     And I fill in "=>Folder.folder2.ID" for "ParentID"
-    And I press the "Save" button
+    And I press "Save" button
     And I go to "/admin/assets"
     And I click on "folder2" in the "Files" table
     And the "folder2" table should contain "file1.jpg"
