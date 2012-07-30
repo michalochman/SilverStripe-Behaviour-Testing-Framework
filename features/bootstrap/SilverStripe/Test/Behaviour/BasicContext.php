@@ -72,9 +72,15 @@ class BasicContext extends BehatContext
      * Hook into jQuery ajaxStart, ajaxSuccess and ajaxComplete events.
      * Prepare __ajaxStatus() functions and attach them to these handlers.
      * Event handlers are removed after one run.
+     *
+     * @BeforeStep
      */
-    public function ajaxClickHandler_before()
+    public function handleAjaxBeforeStep(StepEvent $event)
     {
+        if (!preg_match('/(go to|follow|press|click|submit)/i', $event->getStep()->getText())) {
+            return;
+        }
+
         $javascript = <<<JS
 if ('undefined' !== typeof window.jQuery) {
     window.jQuery(document).on('ajaxStart.ss.test.behaviour', function(){
@@ -104,9 +110,15 @@ JS;
     /**
      * Wait for the __ajaxStatus()to return anything but 'waiting'.
      * Don't wait longer than 5 seconds.
+     *
+     * @AfterStep
      */
-    public function ajaxClickHandler_after()
+    public function handleAjaxAfterStep(StepEvent $event)
     {
+        if (!preg_match('/(go to|follow|press|click|submit)/i', $event->getStep()->getText())) {
+            return;
+        }
+
         $this->getSession()->wait(5000,
             "(typeof window.__ajaxStatus !== 'undefined' ? window.__ajaxStatus() : 'no ajax') !== 'waiting'"
         );
