@@ -70,7 +70,7 @@ Feature: Manage files
     # Good enough for now, unless you can find an easy way
     # to check for both HTML5 uploads and hidden iframes.
     # We use https://github.com/blueimp/jQuery-File-Upload for this.
-    And I wait for "30000"
+    And I wait for "5000"
     And I press "Back to folder" button
     Then the "Files" table should contain "testfile.jpg"
 
