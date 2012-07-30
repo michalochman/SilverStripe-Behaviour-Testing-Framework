@@ -237,7 +237,10 @@ JS;
      */
     public function iTypeIntoTheDialog($data)
     {
-        $this->getSession()->getDriver()->wdSession->postAlert_Text($data);
+        $data = array(
+            'text' => $data,
+        );
+        $this->getSession()->getDriver()->wdSession->postAlert_text($data);
     }
 
     /**
