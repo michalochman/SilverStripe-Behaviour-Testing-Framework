@@ -122,6 +122,10 @@ JS;
         $this->getSession()->wait(5000,
             "(typeof window.__ajaxStatus !== 'undefined' ? window.__ajaxStatus() : 'no ajax') !== 'waiting'"
         );
+
+        // wait additional 100ms to allow DOM to update
+        $this->getSession()->wait(100);
+
         $javascript = <<<JS
 if ('undefined' !== typeof window.jQuery) {
     window.jQuery(document).off('ajaxStart.ss.test.behaviour');
