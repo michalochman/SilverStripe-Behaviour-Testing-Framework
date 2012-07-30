@@ -18,6 +18,8 @@ default:
       javascript_session: selenium2
       goutte: ~
       selenium2:
-        browser: chrome
-#        browser: firefox
+#        browser: chrome
+        capabilities:
+          version: ANY
+          browserName: chrome
 #        host: 'http://localhost:4444/wd/hub'
