@@ -43,11 +43,12 @@ Feature: Manage files
 #      - Access to 'Files' section
     And I go to "/admin/assets"
 
+  @modal
   Scenario: I can add a new folder
     Given I press "Add folder" button
     And I type "newfolder" into the dialog
     And I confirm the dialog
-    Then I should see "newfolder" in the CMS edit area
+    Then the "Files" table should contain "newfolder"
 
   Scenario: I can list files in a folder
     # Slight variation of the "in the '#<selector>' area, specific for GridFields with a title
