@@ -111,7 +111,9 @@ JS;
      * Wait for the __ajaxStatus()to return anything but 'waiting'.
      * Don't wait longer than 5 seconds.
      *
-     * @AfterStep
+     * Don't unregister handler if we're dealing with modal windows
+     *
+     * @AfterStep ~@modal
      */
     public function handleAjaxAfterStep(StepEvent $event)
     {
@@ -119,12 +121,7 @@ JS;
             return;
         }
 
-        $this->getSession()->wait(5000,
-            "(typeof window.__ajaxStatus !== 'undefined' ? window.__ajaxStatus() : 'no ajax') !== 'waiting'"
-        );
-
-        // wait additional 100ms to allow DOM to update
-        $this->getSession()->wait(100);
+        $this->handleAjaxTimeout();
 
         $javascript = <<<JS
 if ('undefined' !== typeof window.jQuery) {
@@ -134,6 +131,16 @@ if ('undefined' !== typeof window.jQuery) {
 }
 JS;
         $this->getSession()->executeScript($javascript);
+    }
+
+    public function handleAjaxTimeout()
+    {
+        $this->getSession()->wait(5000,
+            "(typeof window.__ajaxStatus !== 'undefined' ? window.__ajaxStatus() : 'no ajax') !== 'waiting'"
+        );
+
+        // wait additional 100ms to allow DOM to update
+        $this->getSession()->wait(100);
     }
 
     /**
@@ -239,6 +246,7 @@ JS;
     public function iConfirmTheDialog()
     {
         $this->getSession()->getDriver()->wdSession->accept_alert();
+        $this->handleAjaxTimeout();
     }
 
     /**
@@ -247,5 +255,6 @@ JS;
     public function iDismissTheDialog()
     {
         $this->getSession()->getDriver()->wdSession->dismiss_alert();
+        $this->handleAjaxTimeout();
     }
 }
