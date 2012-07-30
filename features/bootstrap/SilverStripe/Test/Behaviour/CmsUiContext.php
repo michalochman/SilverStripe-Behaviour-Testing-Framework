@@ -212,7 +212,7 @@ class CmsUiContext extends BehatContext
     {
         $table_element = $this->getGridfieldTable($table);
 
-        $element = $table_element->find('named', array('content', "'$text'"));
+        $element = $table_element->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', $text));
         assertNotNull($element, sprintf('Element containing `%s` not found', $text));
         $element->click();
     }

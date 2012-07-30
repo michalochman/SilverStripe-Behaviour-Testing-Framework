@@ -215,21 +215,13 @@ JS;
     {
         $page = $this->getSession()->getPage();
 
-        // for not yet known reason, the below 'content' named selector is not working
-        /*$parent_element = $page->find('css', $selector);
+        $parent_element = $page->find('css', $selector);
         assertNotNull($parent_element, sprintf('"%s" element not found', $selector));
 
-        $element = $parent_element->find('named', array('content', "'$text'"));
+        $element = $parent_element->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', $text));
         assertNotNull($element, sprintf('"%s" not found', $text));
 
-        $element->click();*/
-        // triggering click by JS because of above
-        $javascript = <<<JS
-if ('undefined' !== typeof window.jQuery) {
-    return window.jQuery('$selector :contains("$text")').trigger('click');
-}
-JS;
-        $this->getSession()->executeScript($javascript);
+        $element->click();
     }
 
     /**
