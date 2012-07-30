@@ -6,7 +6,9 @@ use Behat\Behat\Context\ClosuredContextInterface,
     Behat\Behat\Context\TranslatedContextInterface,
     Behat\Behat\Context\BehatContext,
     Behat\Behat\Context\Step,
+    Behat\Behat\Event\StepEvent,
     Behat\Behat\Exception\PendingException;
+use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
 
@@ -116,6 +118,34 @@ if ('undefined' !== typeof window.jQuery) {
 }
 JS;
         $this->getSession()->executeScript($javascript);
+    }
+
+    /**
+     * Take screenshot when step fails.
+     * Works only with Selenium2Driver.
+     *
+     * @AfterStep
+     */
+    public function takeScreenshotAfterFailedStep(StepEvent $event)
+    {
+        if (4 === $event->getResult()) {
+            $driver = $this->getSession()->getDriver();
+            // quit silently when unsupported
+            if (!($driver instanceof Selenium2Driver)) {
+                return;
+            }
+
+            $parent = $event->getLogicalParent();
+            $feature = $parent->getFeature();
+            $step = $event->getStep();
+
+            // TODO:
+            // - line below assumes that /tmp exists and is writable - most likely need to change the path
+            $screenshot_path = sprintf('/tmp/%s_%d.png', basename($feature->getFile()), $step->getLine());
+            $screenshot = $driver->wdSession->screenshot();
+            file_put_contents($screenshot_path, base64_decode($screenshot));
+            file_put_contents('php://stderr', sprintf('Saving screenshot into %s' . PHP_EOL, $screenshot_path));
+        }
     }
 
     /**
