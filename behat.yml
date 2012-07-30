@@ -23,3 +23,11 @@ default:
           version: ANY
           browserName: chrome
 #        host: 'http://localhost:4444/wd/hub'
+
+firefox:
+  extensions:
+      Behat\MinkExtension\Extension:
+        selenium2:
+          capabilities:
+            version: ANY
+            browserName: firefox
