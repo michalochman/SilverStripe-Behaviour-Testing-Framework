@@ -9,7 +9,8 @@ As well as this package, you will need to download/install:
 * [PHPUnit](https://github.com/sebastianbergmann/phpunit/)
 * [Selenium](http://seleniumhq.org/)
 
-Composer dependencies file is included in this repository, so all you need to do for now on either Linux or Mac OS X is:
+Composer dependencies file is included in this repository, so all you need to do for now
+on either Linux or Mac OS X is:
 
     # Execute the following in your project root
     # (or where composer.json is located)
