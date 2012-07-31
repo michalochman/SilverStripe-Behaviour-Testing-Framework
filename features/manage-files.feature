@@ -89,6 +89,7 @@ Feature: Manage files
     # previous scenario at this point
     And I click on "file1" in the "folder1" table
     And I press "Delete" button
+    Then the "folder1" table should not contain "file1"
 
   Scenario: I can change the folder of a file
     Given I click on "folder1" in the "Files" table
