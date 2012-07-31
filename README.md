@@ -27,7 +27,7 @@ To install PHPUnit:
 To install Selenium:
 
     # This will download selenium
-    wget http://selenium.googlecode.com/files/selenium-server-standalone-2.23.1.jar
+    wget http://selenium.googlecode.com/files/selenium-server-standalone-2.25.0.jar
 
 ## Running tests
 
@@ -35,11 +35,11 @@ To install Selenium:
 
 You can either run the server in a separate Terminal tab:
 
-    java -jar selenium-server-standalone-2.23.1.jar
+    java -jar selenium-server-standalone-2.25.0.jar
 
 Or you can run it in the background:
 
-    java -jar selenium-server-standalone-2.23.1.jar > /dev/null &
+    java -jar selenium-server-standalone-2.25.0.jar > /dev/null &
 
 
 ### Running the tests
