@@ -350,4 +350,54 @@ class SilverStripeContext extends MinkContext implements SilverStripeAwareContex
 
         return new Step\Given($step);
     }
+
+    /**
+     * @Given /^((?:I )fill in =>(.+?) for "([^"]*)")$/
+     */
+    public function iFillInFor($step, $reference, $field)
+    {
+        if (false === strpos($reference, '.')) {
+            throw new \Exception('Fixture reference should be in following format: =>ClassName.identifier');
+        }
+
+        list($class_name, $identifier) = explode('.', $reference);
+        $id = $this->idFromFixture($class_name, $identifier);
+        //$step = preg_replace('#=>(.+?) for "([^"]*)"#', '"'.$id.'" for "'.$field.'"', $step);
+
+        // below is not working, because Selenium can't interact with hidden inputs
+        // return new Step\Given($step);
+
+        // TODO: investigate how to simplify this and make universal
+        $javascript = <<<JAVASCRIPT
+if ('undefined' !== typeof window.jQuery) {
+    window.jQuery('input[name="$field"]').val($id);
+}
+JAVASCRIPT;
+        $this->getSession()->executeScript($javascript);
+    }
+
+    /**
+     * @Given /^((?:I )fill in "([^"]*)" with =>(.+))$/
+     */
+    public function iFillInWith($step, $field, $reference)
+    {
+        if (false === strpos($reference, '.')) {
+            throw new \Exception('Fixture reference should be in following format: =>ClassName.identifier');
+        }
+
+        list($class_name, $identifier) = explode('.', $reference);
+        $id = $this->idFromFixture($class_name, $identifier);
+        //$step = preg_replace('#"([^"]*)" with =>(.+)#', '"'.$field.'" with "'.$id.'"', $step);
+
+        // below is not working, because Selenium can't interact with hidden inputs
+        // return new Step\Given($step);
+
+        // TODO: investigate how to simplify this and make universal
+        $javascript = <<<JAVASCRIPT
+if ('undefined' !== typeof window.jQuery) {
+    window.jQuery('input[name="$field"]').val($id);
+}
+JAVASCRIPT;
+        $this->getSession()->executeScript($javascript);
+    }
 }
