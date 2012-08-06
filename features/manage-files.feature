@@ -94,9 +94,9 @@ Feature: Manage files
   Scenario: I can change the folder of a file
     Given I click on "folder1" in the "Files" table
     And I click on "file1" in the "folder1" table
-    # Should be implemented as a generic preprocessor available to all steps
-    And I fill in "=>Folder.folder2.ID" for "ParentID"
+    And I fill in =>Folder.folder2 for "ParentID"
     And I press "Save" button
-    And I go to "/admin/assets"
+    # /show/0 is to ensure that we are on top level folder
+    And I go to "/admin/assets/show/0"
     And I click on "folder2" in the "Files" table
     And the "folder2" table should contain "file1"
