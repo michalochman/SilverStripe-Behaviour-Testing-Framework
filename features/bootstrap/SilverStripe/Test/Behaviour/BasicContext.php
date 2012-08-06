@@ -252,4 +252,17 @@ JS;
         $this->getSession()->getDriver()->wdSession->dismiss_alert();
         $this->handleAjaxTimeout();
     }
+
+    /**
+     * @Given /^(I attach the file .*) with HTML5$/
+     */
+    public function iAttachTheFileTo($step)
+    {
+        $this->getSession()->evaluateScript("jQuery('.ss-uploadfield-editandorganize').show()");
+        $this->getSession()->evaluateScript("jQuery('[name=\"AssetUploadField\"]').css({opacity:1,visibility:'visible',height:'1px',width:'1px'})");
+        $this->getSession()->evaluateScript("jQuery('[name=\"files[]\"]').css({opacity:1,visibility:'visible',height:'1px',width:'1px'})");
+        $this->getSession()->wait(1000);
+
+        return new Step\Given($step);
+    }
 }
