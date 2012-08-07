@@ -162,9 +162,7 @@ JS;
             $feature = $parent->getFeature();
             $step = $event->getStep();
 
-            // TODO:
-            // - line below assumes that /tmp exists and is writable - most likely need to change the path
-            $screenshot_path = sprintf('/tmp/%s_%d.png', basename($feature->getFile()), $step->getLine());
+            $screenshot_path = realpath(sprintf('%s/%s_%d.png', sys_get_temp_dir(), basename($feature->getFile()), $step->getLine()));
             $screenshot = $driver->wdSession->screenshot();
             file_put_contents($screenshot_path, base64_decode($screenshot));
             file_put_contents('php://stderr', sprintf('Saving screenshot into %s' . PHP_EOL, $screenshot_path));
