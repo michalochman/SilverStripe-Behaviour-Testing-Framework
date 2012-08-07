@@ -26,7 +26,7 @@ require_once 'vendor/autoload.php';
  */
 class SilverStripeContext extends MinkContext implements SilverStripeAwareContextInterface
 {
-    private $session_key;
+    private $database_name;
 
     protected $context;
     protected $fixtures;
@@ -46,9 +46,9 @@ class SilverStripeContext extends MinkContext implements SilverStripeAwareContex
         $this->context = $parameters;
     }
 
-    public function setSessionKey($session_key)
+    public function setDatabase($database_name)
     {
-        $this->session_key = $session_key;
+        $this->database_name = $database_name;
     }
 
     public function getFixture($data_object)
@@ -70,15 +70,13 @@ class SilverStripeContext extends MinkContext implements SilverStripeAwareContex
      */
     public function before(ScenarioEvent $event)
     {
-        if (!isset($this->session_key)) {
-            throw new \LogicException('Context\'s $session_key has to be set when implementing SilverStripeAwareContextInterface.');
+        if (!isset($this->database_name)) {
+            throw new \LogicException('Context\'s $database_name has to be set when implementing SilverStripeAwareContextInterface.');
         }
 
-        $selectsession_url = $this->joinUrlParts($this->context['base_url'], '/dev/tests/selectsession');
-        $this->getSession()->visit($selectsession_url);
-        $page = $this->getSession()->getPage();
-        $page->find('css', '#testSessionKey')->setValue($this->session_key);
-        $page->find('css', '#select-session')->click();
+        $setdb_url = $this->joinUrlParts($this->context['base_url'], '/dev/tests/setdb');
+        $setdb_url = sprintf('%s?database=%s', $setdb_url, $this->database_name);
+        $this->getSession()->visit($setdb_url);
     }
 
     /**

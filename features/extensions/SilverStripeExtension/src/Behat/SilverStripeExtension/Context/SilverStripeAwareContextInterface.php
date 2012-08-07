@@ -21,7 +21,7 @@ interface SilverStripeAwareContextInterface
     /**
      * Sets SilverStripe instance.
      *
-     * @param String $session_key testSessionKey used in TEMP_FOLDER/testsessions/<testSessionKey> file
+     * @param String $database_name Temp database name
      */
-    public function setSessionKey($session_key);
+    public function setDatabase($database_name);
 }
