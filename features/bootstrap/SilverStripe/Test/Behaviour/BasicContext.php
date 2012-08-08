@@ -156,7 +156,22 @@ JS;
             $feature = $parent->getFeature();
             $step = $event->getStep();
 
-            $screenshot_path = realpath(sprintf('%s/%s_%d.png', sys_get_temp_dir(), basename($feature->getFile()), $step->getLine()));
+            if (isset($this->context['screenshot_path'])) {
+                $screenshot_path = realpath($this->context['screenshot_path']);
+            } else {
+                $screenshot_path = realpath(sys_get_temp_dir());
+            }
+
+            if (!is_dir($screenshot_path)) {
+                file_put_contents('php://stderr', sprintf('"%s" is not valid directory' . PHP_EOL, $this->context['screenshot_path']));
+                return;
+            }
+            if (!is_writable($screenshot_path)) {
+                file_put_contents('php://stderr', sprintf('"%s" directory is not writable' . PHP_EOL, $screenshot_path));
+                return;
+            }
+
+            $screenshot_path = sprintf('%s/%s_%d.png', $screenshot_path, basename($feature->getFile()), $step->getLine());
             $screenshot = $driver->wdSession->screenshot();
             file_put_contents($screenshot_path, base64_decode($screenshot));
             file_put_contents('php://stderr', sprintf('Saving screenshot into %s' . PHP_EOL, $screenshot_path));

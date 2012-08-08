@@ -38,6 +38,11 @@ config file. This `base_url` is used when concatenating URLs by
 `SilverStripeContext->joinUrlParts()` method. `admin_url` and `login_url` should not
 be changed in general (unless they are not correct)
 
+Optional `screenshot_path` variable is used to store screenshot of a last know state
+of a failed step. It defaults to whatever is returned by PHP's `sys_get_temp_dir()`.
+Screenshot names within that directory consist of feature file filename and line
+number that failed.
+
     # behat.yml
     default:
       # ...
@@ -46,6 +51,7 @@ be changed in general (unless they are not correct)
           base_url: http://localhost
           admin_url: /admin/
           login_url: /Security/login
+          screenshot_path: features/screenshots/
 
 ### Configuring extensions
 
