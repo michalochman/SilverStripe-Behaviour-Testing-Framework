@@ -49,26 +49,6 @@ class BasicContext extends BehatContext
     }
 
     /**
-     * @BeforeStep @javascript
-     */
-    public function beforeStep($event)
-    {
-        if (preg_match('/(go to|follow|press|click|submit)/i', $event->getStep()->getText())) {
-            $this->ajaxClickHandler_before();
-        }
-    }
-
-    /**
-     * @AfterStep @javascript
-     */
-    public function afterStep($event)
-    {
-        if (preg_match('/(go to|follow|press|click|submit)/i', $event->getStep()->getText())) {
-            $this->ajaxClickHandler_after();
-        }
-    }
-
-    /**
      * Hook into jQuery ajaxStart, ajaxSuccess and ajaxComplete events.
      * Prepare __ajaxStatus() functions and attach them to these handlers.
      * Event handlers are removed after one run.
