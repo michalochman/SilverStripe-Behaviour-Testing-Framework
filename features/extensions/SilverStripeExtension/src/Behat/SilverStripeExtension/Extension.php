@@ -39,11 +39,6 @@ class Extension extends BaseExtension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/services'));
         $loader->load('silverstripe.yml');
 
-        if (!isset($config['framework_host'])) {
-            $config['framework_host'] = $container->getParameter('behat.silverstripe_extension.framework_host');
-            file_put_contents('php://stderr', 'No `framework_host` parameter for silverstripe_extension provided. Assuming ' . $config['framework_host'] . PHP_EOL);
-        }
-
         $behat_base_path = $container->getParameter('behat.paths.base');
         $config['framework_path'] = realpath(sprintf('%s%s%s',
             rtrim($behat_base_path, DIRECTORY_SEPARATOR),
@@ -55,6 +50,17 @@ class Extension extends BaseExtension
         }
 
         $container->setParameter('behat.silverstripe_extension.framework_path', $config['framework_path']);
-        $container->setParameter('behat.silverstripe_extension.framework_host', $config['framework_host']);
+    }
+
+    /**
+     * Returns compiler passes used by SilverStripe extension.
+     *
+     * @return array
+     */
+    public function getCompilerPasses()
+    {
+        return array(
+            new Compiler\MinkExtensionBaseUrlPass(),
+        );
     }
 }

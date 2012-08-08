@@ -9,7 +9,6 @@ default:
     features/extensions/SilverStripeExtension/init.php:
 #    Behat\SilverStripeExtension\Extension:
       framework_path: ../../
-      framework_host: http://localhost
     Behat\MinkExtension\Extension:
       base_url:  http://localhost
       files_path: %behat.paths.features%/files/
