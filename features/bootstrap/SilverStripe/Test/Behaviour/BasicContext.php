@@ -188,7 +188,7 @@ JS;
             $client->followRedirects(true);
             $client->followRedirect();
 
-            $url = $this->getMainContext()->joinUrlParts($this->context['base_url'], $url);
+            $url = $this->getMainContext()->joinUrlParts($this->getMainContext()->getBaseUrl(), $url);
 
             assertTrue($this->getMainContext()->isCurrentUrlSimilarTo($url), sprintf('Current URL is not %s', $url));
         }

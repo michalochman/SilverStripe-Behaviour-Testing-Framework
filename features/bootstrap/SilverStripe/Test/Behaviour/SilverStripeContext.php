@@ -74,7 +74,7 @@ class SilverStripeContext extends MinkContext implements SilverStripeAwareContex
             throw new \LogicException('Context\'s $database_name has to be set when implementing SilverStripeAwareContextInterface.');
         }
 
-        $setdb_url = $this->joinUrlParts($this->context['base_url'], '/dev/tests/setdb');
+        $setdb_url = $this->joinUrlParts($this->getBaseUrl(), '/dev/tests/setdb');
         $setdb_url = sprintf('%s?database=%s', $setdb_url, $this->database_name);
         $this->getSession()->visit($setdb_url);
     }
@@ -296,6 +296,18 @@ class SilverStripeContext extends MinkContext implements SilverStripeAwareContex
         }
 
         return true;
+    }
+
+    /**
+     * Returns base URL parameter set in MinkExtension.
+     * It simplifies configuration by allowing to specify this parameter
+     * once but makes code dependent on MinkExtension.
+     *
+     * @return string
+     */
+    public function getBaseUrl()
+    {
+        return $this->getMinkParameter('base_url') ?: '';
     }
 
     /**

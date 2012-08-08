@@ -53,8 +53,8 @@ class LoginContext extends BehatContext
      */
     public function stepIAmLoggedIn()
     {
-        $admin_url = $this->getMainContext()->joinUrlParts($this->context['base_url'], $this->context['admin_url']);
-        $login_url = $this->getMainContext()->joinUrlParts($this->context['base_url'], $this->context['login_url']);
+        $admin_url = $this->getMainContext()->joinUrlParts($this->getMainContext()->getBaseUrl(), $this->context['admin_url']);
+        $login_url = $this->getMainContext()->joinUrlParts($this->getMainContext()->getBaseUrl(), $this->context['login_url']);
 
         $this->getSession()->visit($admin_url);
 
@@ -111,7 +111,7 @@ class LoginContext extends BehatContext
      */
     public function stepILogInWith($email, $password)
     {
-        $login_url = $this->getMainContext()->joinUrlParts($this->context['base_url'], $this->context['login_url']);
+        $login_url = $this->getMainContext()->joinUrlParts($this->getMainContext()->getBaseUrl(), $this->context['login_url']);
 
         $this->getSession()->visit($login_url);
 

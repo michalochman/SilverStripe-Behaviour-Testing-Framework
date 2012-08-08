@@ -2,7 +2,6 @@
 default:
   context:
     parameters:
-      base_url: http://localhost
       admin_url: /admin/
       login_url: /Security/login
       screenshot_path: features/screenshots/
