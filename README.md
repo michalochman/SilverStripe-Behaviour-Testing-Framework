@@ -32,11 +32,7 @@ To install Selenium:
 
 ## Configuration
 
-You will probably need to change the base URL that is used during the test process.
-Currently, you have to change it in several places. One of them is main `behat.yml`
-config file. This `base_url` is used when concatenating URLs by
-`SilverStripeContext->joinUrlParts()` method. `admin_url` and `login_url` should not
-be changed in general (unless they are not correct)
+`admin_url` and `login_url` should not be changed unless you customized them somehow.
 
 Optional `screenshot_path` variable is used to store screenshot of a last know state
 of a failed step. It defaults to whatever is returned by PHP's `sys_get_temp_dir()`.
@@ -48,7 +44,6 @@ number that failed.
       # ...
       context:
         parameters:
-          base_url: http://localhost
           admin_url: /admin/
           login_url: /Security/login
           screenshot_path: features/screenshots/
@@ -57,8 +52,9 @@ number that failed.
 
 #### MinkExtension
 
-You will also need to modify `base_url` passed to `MinkExtension`. This one is used
-every time you use relative URL in your feature descriptions.
+You will probably need to change the base URL that is used during the test process.
+It is used every time you use relative URLs in your feature descriptions.
+It will also be used by [file to URL mapping](http://doc.silverstripe.org/framework/en/topics/commandline#configuration) in `SilverStripeExtension`.
 
 You also have to change `files_path` path when you want to support file uploads.
 Otherwise, you can remove it from the config. Currently only absolute paths are supported.
@@ -78,11 +74,14 @@ to change it if you want to try other driver sessions like `goutte`.
 
 #### SilverStripeExtension
 
-The next place where you have to change the URL to your site is in `SilverStripeExtension`.
-It is used by [file to URL mapping](http://doc.silverstripe.org/framework/en/topics/commandline#configuration).
-
 You also can change the path to the SilverStripe framework with `framework_path`.
 It supports both absolute and relative (to `behat.yml` file) paths.
+
+Because SilverStripe uses AJAX requests quite extensively, we had to invent a way
+to deal with them more efficiently and less verbose than just
+Optional `ajax_steps` is used to match steps defined there so they can be "caught" by
+[special AJAX handlers](http://blog.scur.pl/2012/06/ajax-callback-support-behat-mink/) that tweak the delays.
+You can either use a pipe delimited string or a list of substrings that match step definition.
 
     # behat.yml
     default:
@@ -90,7 +89,13 @@ It supports both absolute and relative (to `behat.yml` file) paths.
       extensions:
         features/extensions/SilverStripeExtension/init.php:
           framework_path: ../../
-          framework_host: http://localhost
+          # ajax_steps: "go to|follow|press|click|submit"
+          ajax_steps:
+            - go to
+            - follow
+            - press
+            - click
+            - submit
 
 ### Additional profiles
 
