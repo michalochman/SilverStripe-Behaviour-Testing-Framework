@@ -34,7 +34,7 @@ To install Selenium:
 
 `admin_url` and `login_url` should not be changed unless you customized them somehow.
 
-Optional `screenshot_path` variable is used to store screenshot of a last know state
+Optional `screenshot_path` variable is used to store screenshot of a last known state
 of a failed step. It defaults to whatever is returned by PHP's `sys_get_temp_dir()`.
 Screenshot names within that directory consist of feature file filename and line
 number that failed.
