@@ -25,14 +25,16 @@ use Behat\SilverStripeExtension\Context\SilverStripeAwareContextInterface;
 class SilverStripeAwareInitializer implements InitializerInterface
 {
     private $database_name;
+    private $ajax_steps;
 
     /**
      * Initializes initializer.
      */
-    public function __construct($framework_path, $framework_host)
+    public function __construct($framework_path, $framework_host, $ajax_steps)
     {
         $this->bootstrap($framework_path, $framework_host);
         $this->database_name = $this->initializeTempDb();
+        $this->ajax_steps = $ajax_steps;
     }
 
     public function __destruct()
@@ -60,6 +62,7 @@ class SilverStripeAwareInitializer implements InitializerInterface
     public function initialize(ContextInterface $context)
     {
         $context->setDatabase($this->database_name);
+        $context->setAjaxEnabledSteps($this->ajax_steps);
     }
 
     protected function bootstrap($framework_path, $framework_host)

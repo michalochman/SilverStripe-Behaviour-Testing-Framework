@@ -27,6 +27,7 @@ require_once 'vendor/autoload.php';
 class SilverStripeContext extends MinkContext implements SilverStripeAwareContextInterface
 {
     private $database_name;
+    private $ajax_steps;
 
     protected $context;
     protected $fixtures;
@@ -49,6 +50,19 @@ class SilverStripeContext extends MinkContext implements SilverStripeAwareContex
     public function setDatabase($database_name)
     {
         $this->database_name = $database_name;
+    }
+
+    public function setAjaxEnabledSteps($ajax_steps)
+    {
+        if (empty($ajax_steps)) {
+            $ajax_steps = array();
+        }
+        $this->ajax_steps = $ajax_steps;
+    }
+
+    public function getAjaxEnabledSteps()
+    {
+        return $this->ajax_steps;
     }
 
     public function getFixture($data_object)

@@ -50,6 +50,9 @@ class Extension extends BaseExtension
         }
 
         $container->setParameter('behat.silverstripe_extension.framework_path', $config['framework_path']);
+        if (isset($config['ajax_steps'])) {
+            $container->setParameter('behat.silverstripe_extension.ajax_steps', $config['ajax_steps']);
+        }
     }
 
     /**

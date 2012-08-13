@@ -97,7 +97,10 @@ JS;
      */
     public function handleAjaxBeforeStep(StepEvent $event)
     {
-        if (!preg_match('/(go to|follow|press|click|submit)/i', $event->getStep()->getText())) {
+        $ajax_enabled_steps = $this->getMainContext()->getAjaxEnabledSteps();
+        $ajax_enabled_steps = implode('|', array_filter($ajax_enabled_steps));
+
+        if (empty($ajax_enabled_steps) || !preg_match('/(' . $ajax_enabled_steps . ')/i', $event->getStep()->getText())) {
             return;
         }
 
@@ -133,38 +136,27 @@ JS;
      *
      * Don't unregister handler if we're dealing with modal windows
      *
-     * Below are the strings that are matched against step name
-     * that is possibly using AJAX
-     * @match     go to
-     * @match     follow
-     * @match     press
-     * @match     click
-     * @match     submit
-     *
      * @AfterStep ~@modal
      */
     public function handleAjaxAfterStep(StepEvent $event)
     {
-        $method = new \ReflectionMethod(__CLASS__, substr(__METHOD__, strpos(__METHOD__, '::') + 2));
-        if (preg_match_all('#\* @match (.+)#', $method->getDocComment(), $m)) {
-            array_walk($m[1], create_function('&$val', '$val = trim($val);'));
-            $matches = implode('|', array_filter($m[1]));
+        $ajax_enabled_steps = $this->getMainContext()->getAjaxEnabledSteps();
+        $ajax_enabled_steps = implode('|', array_filter($ajax_enabled_steps));
 
-            if (!preg_match('/(?:' . $matches . ')/i', $event->getStep()->getText())) {
-                return;
-            }
+        if (empty($ajax_enabled_steps) || !preg_match('/(' . $ajax_enabled_steps . ')/i', $event->getStep()->getText())) {
+            return;
+        }
 
-            $this->handleAjaxTimeout();
+        $this->handleAjaxTimeout();
 
-            $javascript = <<<JS
+        $javascript = <<<JS
 if ('undefined' !== typeof window.jQuery) {
-    window.jQuery(document).off('ajaxStart.ss.test.behaviour');
-    window.jQuery(document).off('ajaxComplete.ss.test.behaviour');
-    window.jQuery(document).off('ajaxSuccess.ss.test.behaviour');
+window.jQuery(document).off('ajaxStart.ss.test.behaviour');
+window.jQuery(document).off('ajaxComplete.ss.test.behaviour');
+window.jQuery(document).off('ajaxSuccess.ss.test.behaviour');
 }
 JS;
-            $this->getSession()->executeScript($javascript);
-        }
+        $this->getSession()->executeScript($javascript);
     }
 
     public function handleAjaxTimeout()
