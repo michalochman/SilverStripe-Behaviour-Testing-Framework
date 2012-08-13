@@ -49,6 +49,45 @@ class BasicContext extends BehatContext
     }
 
     /**
+     * @AfterStep ~@modal
+     *
+     * Excluding scenarios with @modal tag is required,
+     * because modal dialogs stop any JS interaction
+     */
+    public function appendErrorHandlerBeforeStep(StepEvent $event)
+    {
+        $javascript = <<<JS
+window.onerror = function(msg) {
+    var body = document.getElementsByTagName('body')[0];
+    body.setAttribute('data-jserrors', '[captured JavaScript error] ' + msg);
+}
+if ('undefined' !== typeof window.jQuery) {
+    window.jQuery('body').ajaxError(function(event, jqxhr, settings, exception) {
+        window.onerror(event.type + ': ' + settings.type + ' ' + settings.url + ' ' + exception);
+    });
+}
+JS;
+
+        $this->getSession()->executeScript($javascript);
+    }
+
+    /**
+     * @AfterStep ~@modal
+     *
+     * Excluding scenarios with @modal tag is required,
+     * because modal dialogs stop any JS interaction
+     */
+    public function readErrorHandlerAfterStep(StepEvent $event)
+    {
+        $page = $this->getSession()->getPage();
+
+        $jserrors = $page->find('xpath', '//body[@data-jserrors]');
+        if (null !== $jserrors) {
+            throw new \Exception($jserrors->getAttribute('data-jserrors'));
+        }
+    }
+
+    /**
      * Hook into jQuery ajaxStart, ajaxSuccess and ajaxComplete events.
      * Prepare __ajaxStatus() functions and attach them to these handlers.
      * Event handlers are removed after one run.
