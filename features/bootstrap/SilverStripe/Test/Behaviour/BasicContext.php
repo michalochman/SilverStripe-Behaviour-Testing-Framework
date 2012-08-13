@@ -83,6 +83,7 @@ JS;
 
         $jserrors = $page->find('xpath', '//body[@data-jserrors]');
         if (null !== $jserrors) {
+            $this->takeScreenshot($event);
             throw new \Exception($jserrors->getAttribute('data-jserrors'));
         }
     }
