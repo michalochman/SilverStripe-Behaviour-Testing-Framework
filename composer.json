@@ -1,8 +1,9 @@
 {
     "require": {
-        "behat/behat": "2.4.*@stable",
-        "behat/mink":  "1.4.*@stable",
-        "behat/mink-extension": "*",
+        "behat/behat": "2.4@stable",
+        "behat/mink":  "1.4@stable",
+        "behat/mink-extension":  "1.0@stable",
+        "fabpot/goutte": "dev-master",
         "behat/mink-goutte-driver": "*",
         "behat/mink-selenium2-driver": "*",
         "symfony/yaml": "*"
