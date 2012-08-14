@@ -4,7 +4,7 @@ default:
     parameters:
       admin_url: /admin/
       login_url: /Security/login
-      screenshot_path: features/screenshots/
+      screenshot_path: %behat.paths.features%/screenshots/
   extensions:
     features/extensions/SilverStripeExtension/init.php:
 #    Behat\SilverStripeExtension\Extension:

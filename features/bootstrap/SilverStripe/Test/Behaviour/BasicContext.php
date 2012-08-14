@@ -192,18 +192,29 @@ JS;
         $parent = $event->getLogicalParent();
         $feature = $parent->getFeature();
         $step = $event->getStep();
+        $screenshot_path = null;
 
         if (isset($this->context['screenshot_path'])) {
             $screenshot_path = realpath($this->context['screenshot_path']);
-        } else {
+            if (!$screenshot_path) {
+                \Filesystem::makeFolder($this->context['screenshot_path']);
+                $screenshot_path = realpath($this->context['screenshot_path']);
+            }
+        }
+        if (!$screenshot_path) {
             $screenshot_path = realpath(sys_get_temp_dir());
         }
 
-        if (!is_dir($screenshot_path)) {
+        if (!file_exists($screenshot_path)) {
+            file_put_contents('php://stderr', sprintf('"%s" is not valid directory and failed to create it' . PHP_EOL, $this->context['screenshot_path']));
+            return;
+        }
+
+        if (file_exists($screenshot_path) && !is_dir($screenshot_path)) {
             file_put_contents('php://stderr', sprintf('"%s" is not valid directory' . PHP_EOL, $this->context['screenshot_path']));
             return;
         }
-        if (!is_writable($screenshot_path)) {
+        if (file_exists($screenshot_path) && !is_writable($screenshot_path)) {
             file_put_contents('php://stderr', sprintf('"%s" directory is not writable' . PHP_EOL, $screenshot_path));
             return;
         }
