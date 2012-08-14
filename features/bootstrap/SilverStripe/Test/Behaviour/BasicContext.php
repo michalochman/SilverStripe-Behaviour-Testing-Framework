@@ -63,6 +63,7 @@ window.onerror = function(msg) {
 }
 if ('undefined' !== typeof window.jQuery) {
     window.jQuery('body').ajaxError(function(event, jqxhr, settings, exception) {
+        if ('abort' === exception) return;
         window.onerror(event.type + ': ' + settings.type + ' ' + settings.url + ' ' + exception);
     });
 }
