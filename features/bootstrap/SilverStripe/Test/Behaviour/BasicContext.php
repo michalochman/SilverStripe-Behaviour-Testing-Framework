@@ -84,7 +84,7 @@ JS;
         $jserrors = $page->find('xpath', '//body[@data-jserrors]');
         if (null !== $jserrors) {
             $this->takeScreenshot($event);
-            throw new \Exception($jserrors->getAttribute('data-jserrors'));
+            file_put_contents('php://stderr', $jserrors->getAttribute('data-jserrors') . PHP_EOL);
         }
     }
 
