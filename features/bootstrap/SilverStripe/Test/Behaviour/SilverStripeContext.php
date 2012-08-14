@@ -96,7 +96,7 @@ class SilverStripeContext extends MinkContext implements SilverStripeAwareContex
     /**
      * @BeforeScenario @database-defaults
      */
-    public function beforeDatabseDefaults(ScenarioEvent $event)
+    public function beforeDatabaseDefaults(ScenarioEvent $event)
     {
         \SapphireTest::empty_temp_db();
         global $databaseConfig;
@@ -111,7 +111,7 @@ class SilverStripeContext extends MinkContext implements SilverStripeAwareContex
     /**
      * @AfterScenario @database-defaults
      */
-    public function afterDatabseDefaults(ScenarioEvent $event)
+    public function afterDatabaseDefaults(ScenarioEvent $event)
     {
         \SapphireTest::empty_temp_db();
     }
