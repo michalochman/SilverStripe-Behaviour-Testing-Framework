@@ -204,9 +204,8 @@ class SilverStripeContext extends MinkContext implements SilverStripeAwareContex
                         throw new \Exception(sprintf('`%s` already exists and is not a directory', $this->files_path));
                     }
 
-                    if (@mkdir($folder_path, 0777, true)) {
-                        $this->created_files_paths[] = $folder_path;
-                    }
+                    \Filesystem::makeFolder($folder_path);
+                    $this->created_files_paths[] = $folder_path;
                 }
             }
         }
