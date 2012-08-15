@@ -6,8 +6,7 @@ default:
       login_url: /Security/login
       screenshot_path: %behat.paths.features%/screenshots/
   extensions:
-    features/extensions/SilverStripeExtension/init.php:
-#    Behat\SilverStripeExtension\Extension:
+    Behat\SilverStripeExtension\Extension:
       framework_path: ../../
       ajax_steps:
         - go to
