@@ -30,6 +30,16 @@ To install Selenium:
     # This will download selenium
     wget http://selenium.googlecode.com/files/selenium-server-standalone-2.25.0.jar
 
+
+### Additional requirements
+
+Because this testing framework is intended to be used with SilverStripe, you have to
+download and install it too. The minimum version required is `3.0`. Recommended way
+to get started is to [install from source](http://doc.silverstripe.org/framework/en/installation/from-source),
+but it's really up to your preference.
+
+No database content is required because it will be created automatically when needed.
+
 ## Configuration
 
 `admin_url` and `login_url` should not be changed unless you customized them somehow.
@@ -131,7 +141,7 @@ Or you can run it in the background:
 
 You will have Behat binary located in `bin` directory in your project root (or where `composer.json` is located).
 
-By default, Behat will use Goutte driver and Selenium2 driver for `javascript` tagged scenarios.
+By default, Behat will use Selenium2 driver.
 Selenium will also try to use chrome browser. Refer to `behat.yml` for details.
 
     # This will run all feature tests located in `features` directory
@@ -139,6 +149,104 @@ Selenium will also try to use chrome browser. Refer to `behat.yml` for details.
 
     # This will run all feature tests using chrome profile
     bin/behat --profile=chrome
+
+## FAQ
+
+### Why does the module need to know about the framework path on the filesystem?
+
+Sometimes SilverStripe needs to know the URL of your site. When you're visiting
+your site in a web browser this is easy to work out, but if you're executing
+scripts on the command-line, it has no way of knowing.
+
+To work this out, this module is using [file to URL mapping](http://doc.silverstripe.org/framework/en/topics/commandline#configuration).
+
+### How does the module interact with the SS database?
+
+The module creates temporary database on init and is switching to the alternative
+database session before every scenario by using `/dev/tests/setdb` TestRunner
+endpoint.
+
+It also populates this temporary database with the default records if necessary.
+
+It is possible to include your own fixtures, it is explained further.
+
+### How do I define fixtures?
+
+Fixtures should be provided in YAML format (standard SilverStripe fixture format)
+as [PyStrings](http://docs.behat.org/guides/1.gherkin.html#pystrings)
+
+Take a look at the sample fixture logic first:
+
+    Given there are the following Permission records
+      """
+      admin:
+        Code: ADMIN
+      """
+    And there are the following Group records
+      """
+      admingroup:
+        Title: Admin Group
+        Code: admin
+        Permissions: =>Permission.admin
+      """
+    And there are the following Member records
+      """
+      admin:
+        FirstName: Admin
+        Email: admin@test.com
+        Groups: =>Group.admingroup
+      """
+
+In this example, the fixture is used to create Admin member with admin permissions.
+
+As you can see, there are special Gherkin steps that take care of loading
+fixtures into database. They use the following format:
+
+    Given there are the following TableName records
+      """
+      RowIdentifier:
+        ColumnName: Value
+      """
+
+Fixtures may also use a `=>` symbol to indicate relationships between records.
+In the example above `=>Permission.admin` will be replaced with row `ID` of a
+`Permission` record that has `RowIdentifier` set as `admin`.
+
+### When do fixtures get created?
+
+Fixtures are created where you defined them. If you want the fixtures to be created
+before every scenario, define them in [Background](http://docs.behat.org/guides/1.gherkin.html#backgrounds).
+
+If you want them to be created only when a particular scenario runs, define them there.
+
+### When do fixtures get cleared during the feature runs?
+
+Fixtures are usually not cleared between scenarios. You can alter this behaviour
+by tagging the feature or scenario with `@database-defaults` tag.
+
+The module runner empties the database before each scenario tagged with
+`@database-defaults` and populates it with default records (usually a set of
+default pages).
+
+### How do I debug when something goes wrong?
+
+First, read the console output. Behat will tell you which steps have failed.
+
+SilverStripe Behaviour Testing Framework also notifies you about some events.
+It tries to catch some JavaScript errors and AJAX errors as well although it
+is limited to errors that occur after the page is loaded.
+
+Screenshot will be taken by the module every time the step is marked as failed.
+Refer to configuration section above to know how to set up the screenshot path.
+
+If you are unable to debug using the information collected with the above
+methods, it is possible to delay the step execution by adding the following step:
+
+    And I wait for "10000"
+
+where `10000` is the number of millisecods you wish the session to wait.
+It is very useful when you want to look at the error or developer console
+inside the browser or if you want to interact with the session page manually.
 
 ## Useful resources
 
