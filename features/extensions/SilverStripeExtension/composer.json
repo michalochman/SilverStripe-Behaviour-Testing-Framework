@@ -1,23 +1,27 @@
 {
-	"name": "behat/silverstripe-extension",
-	"type": "behat-extension",
-	"description": "SilverStripe framework extension for Behat",
-	"keywords": ["framework", "web", "bdd", "silverstripe"],
-	"homepage": "http://silverstripe.org",
-	"license": "MIT",
-	"authors": [
-		{
-			"name": "Michał Ochman",
-			"email": "ochman.d.michal@gmail.com"
-		}
-	],
+    "name": "behat/silverstripe-extension",
+    "type": "behat-extension",
+    "description": "SilverStripe framework extension for Behat",
+    "keywords": ["framework", "web", "bdd", "silverstripe"],
+    "homepage": "http://silverstripe.org",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michał Ochman",
+            "email": "ochman.d.michal@gmail.com"
+        }
+    ],
 
-	"require": {
-		"php":          ">=5.3.2",
-		"behat/behat":  ">=2.4.0,<2.4.x-dev"
-	},
+    "require": {
+        "php": ">=5.3.2",
+        "behat/behat": "2.4@stable",
+        "behat/mink": "1.4@stable",
+        "behat/mink-extension": "1.0@stable"
+    },
 
-	"autoload": {
-		"psr-0": { "Behat\\SilverStripeExtension": "src/" }
-	}
+    "autoload": {
+        "psr-0": {
+            "Behat\\SilverStripeExtension": "src/"
+        }
+    }
 }
