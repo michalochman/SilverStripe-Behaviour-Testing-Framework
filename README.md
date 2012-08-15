@@ -87,7 +87,7 @@ You can either use a pipe delimited string or a list of substrings that match st
     default:
       # ...
       extensions:
-        features/extensions/SilverStripeExtension/init.php:
+        Behat\SilverStripeExtension\Extension:
           framework_path: ../../
           # ajax_steps: "go to|follow|press|click|submit"
           ajax_steps:
