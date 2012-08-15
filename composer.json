@@ -1,10 +1,4 @@
 {
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/michalochman/SilverStripeExtension"
-        }
-    ],
     "require": {
         "behat/behat": "2.4@stable",
         "behat/mink":  "1.4@stable",
