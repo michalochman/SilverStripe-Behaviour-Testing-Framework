@@ -87,6 +87,15 @@ JS;
             $this->takeScreenshot($event);
             file_put_contents('php://stderr', $jserrors->getAttribute('data-jserrors') . PHP_EOL);
         }
+
+        $javascript = <<<JS
+(function() {
+    var body = document.getElementsByTagName('body')[0];
+    body.removeAttribute('data-jserrors');
+})();
+JS;
+
+        $this->getSession()->executeScript($javascript);
     }
 
     /**
