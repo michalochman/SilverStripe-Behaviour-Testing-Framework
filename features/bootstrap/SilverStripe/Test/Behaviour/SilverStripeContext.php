@@ -117,6 +117,24 @@ class SilverStripeContext extends MinkContext implements SilverStripeAwareContex
     }
 
     /**
+     * @AfterScenario @assets
+     */
+    public function afterResetAssets(ScenarioEvent $event)
+    {
+        if (is_array($this->created_files_paths)) {
+            $created_files = array_reverse($this->created_files_paths);
+            foreach ($created_files as $path) {
+                if (is_dir($path)) {
+                    \Filesystem::removeFolder($path);
+                } else {
+                    @unlink($path);
+                }
+            }
+        }
+        \SapphireTest::empty_temp_db();
+    }
+
+    /**
      * @Given /^there are the following ([^\s]*) records$/
      */
     public function thereAreTheFollowingRecords($data_object, PyStringNode $string)
